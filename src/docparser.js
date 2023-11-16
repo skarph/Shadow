@@ -1,6 +1,7 @@
-import { promises as fs } from 'fs';
+import path from 'path';
+import fs from 'fs';
 
-const file = await fs.readFile(path.join(process.cwd(),'/app/data/doc.json'), 'utf8');
+const file = fs.readFileSync(path.join(process.cwd(),'/app/data/doc.json'), 'utf8');
 const data = JSON.parse(file);
 
 const types = [];
