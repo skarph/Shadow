@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { TYPES, sanitizeLink } from '/src/docparser.js';
-import { parse } from '/src/markdown.js';
-import Box from '/components/box';
+import { TYPES, sanitizeLink } from 'src/docparser.js';
+import { parse } from 'src/markdown.js';
+import Box from 'components/Box';
 const util = require('util')
 
 export async function generateStaticParams() {
