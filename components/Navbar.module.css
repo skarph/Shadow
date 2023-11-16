@@ -1,0 +1,40 @@
+.navbar {
+    width: 100%;
+    background-color: black;
+    height: 96px;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar_inner {
+    width: 60rem;
+    height: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+.item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "8bitOperatorPlus-Bold", monospace;
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.item:hover {
+    color: yellow;
+}
