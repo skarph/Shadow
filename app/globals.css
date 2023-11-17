@@ -30,6 +30,7 @@ body {
 strong, b {
   font-weight: unset;
   font-family: "8bitOperatorPlus-Bold", monospace;
+  color: yellow;
 }
 
 h1, h2, h3, h4, h5, h6 {

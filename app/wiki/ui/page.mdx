@@ -142,25 +142,19 @@ Finally, it's time to make something!
 ## Making a new UI
 ---
 
-Just kidding! We're not ready to make something yet.
-
-Wait. Nevermind. We are.
-
----
-
 Making a UI is simple. You just need to create a component, and then add it somewhere.
 
 If you're in the overworld, add it to [`Game.world`](/wiki/api/Game#world)! In a battle, try [`Game.battle`](/wiki/api/Game#battle).
 
 If it can be *anywhere*, at *any time*, try [`Game.stage`](/wiki/api/Game#stage).
 
-Now, once you've created your component, and added it to something, you just need to focus it.
+Now, let's make the component, and add it!
 
 ```lua
 local root = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
-root:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
-root:addChild(Text("Hello, world!")) -- Add a text object to it!
-Game.stage:addChild(root) -- Add it to the world!
+    root:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
+    root:addChild(Text("Hello, world!")) -- Add a text object to it!
+Game.stage:addChild(root) -- Add it to the stage!
 ```
 
 Assuming you run this in a black void, you should see the following result:
@@ -172,5 +166,332 @@ Perfect! Our component is 640x480, and the child is centered vertically!
 Turning on debug rendering will help a little in understanding what's going on:
 
 ![](/wiki/hello_world_debug.png)
+
+### "What do you mean centered? It's at the left!"
+
+This is a **vertical layout**, therefore it's centered vertically.
+Vertical layouts don't touch horizontal alignment at all.
+So how do we align it horizontally as well, if we want it to be in the middle of the screen?
+
+That's easy! Let's just **make a horizontal layout**!
+
+```lua
+local outer = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
+    outer:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
+    local inner = Component(FillSizing(), FitSizing()) -- Stretch horizontally, fit to content vertically
+        inner:setLayout(HorizontalLayout({ gap = 0, align = "center" })) -- Center it horizontally!
+        inner:addChild(Text("Hello, world!")) -- Add a text object to it!
+    outer:addChild(inner) -- Add the inner component to the outer component!
+Game.stage:addChild(outer) -- Add it to the stage!
+```
+
+This should result in the following:
+
+![](/wiki/hello_world_2.png)
+
+And with debug rendering:
+
+![](/wiki/hello_world_2_debug.png)
+
+### "Wait, hold on, I'm confused. What's going on?"
+
+Let's break it down.
+
+First, we create the outer component, or the **root component**.
+This is the component which'll hold everything else.
+It'll center its children vertically.
+
+Next, we create the inner component, which is the first and only child of the outer component.
+Remember, the outer component centers its children vertically, so the inner component will be centered vertically.
+
+The inner component will stretch horizontally to fill the outer component, and it'll fit to its contents vertically.
+That means, the inner component will be the same width as the outer component, and the same height as its children.
+
+So, we add a child to it -- a text object.
+Again, the inner component will be the same size as the text vertically, but stretch to fill the outer component horizontally.
+
+We make the inner component center its children horizontally, to finish the alignment puzzle.
+The text inside of it will now be centered horizontally.
+
+Finally, we add the inner component to the outer component, and the outer component to the stage, to finish it off.
+
+We've successfully centered a component, both horizontally and vertically!
+That... was a lot of work, though. Is there anything we can do differently?
+</Box>
+
+<Box>
+## No, and here's why
+---
+
+Anything powerful needs to be complicated. That's just how it is.
+Sure, we could make a million different layout types, but how would that interact with wrappin- oh no.
+
+### Wrapping, where are you?
+If you try to cram too many components into another component, it'll start to wrap. Ideally. In reality, it'll just overflow.
+
+![](/wiki/overflow.png)
+
+This component is 320x240. We're adding 8 children to it, 32 pixels tall each, with a gap of 8 pixels between elements.
+
+Let's do 8 * (32 + 8). That's, uh, 320. 320 is larger than 240, the height of the component. Oh no.
+
+There's no wrapping, so what do we do? Simple: we pick **an overflow mode.**
+
+---
+
+### Overflow modes
+
+There's three overflow modes: `"visible"`, `"hidden"`, and `"scroll"`, which you can use with [`component:setOverflow(mode)`](/wiki/api/Component#setOverflow).
+
+#### `"visible"`
+This is the default overflow mode. It'll just let the component overflow, and it'll be visible.
+
+#### `"hidden"`
+This overflow mode will hide any overflowing components. They'll be invisible.
+
+#### `"scroll"`
+This overflow mode will let you scroll the component.
+- You can use [`AbstractMenuComponent:setScrollType(type)`](/wiki/api/AbstractMenuComponent#setScrollType) with either `"paged"` or `"scroll"` (default).
+
+---
+
+### "You keep talking about wrapping, or a lack thereof. Just get to the point already!"
+
+Fine, fine. Wrapping is complicated. It's not something you can just add, and it'll work perfectly. There's a lot of things to consider.
+
+That means, **for the moment,** there's no wrapping. I'll be honest, I wasn't able to figure out a good way to do it.
+
+If you need wrapping, maybe it's a good idea to manually position your components. That's something you can do, by the way.
+</Box>
+
+<Box>
+## Manual positioning of components
+---
+
+Ever wonder what happens if you don't call `component:setLayout(layout)`? Well, simple, it doesn't have a layout.
+Or rather, it has **the default layout,** quite simply named [`Layout`](/wiki/api/Layout).
+
+The default layout snaps components to the top-left corner of the parent component
+(taking into account margins and padding), adjusts their positions based on scrolling, and... that's all.
+
+Both `HorizontalLayout` and `VerticalLayout` do the same thing, and just do more on top of that.
+They always start by snapping components to the top-left corner.
+
+Anyway, how do we actually choose the positioning of a component? Just setting the `x` and `y` properties can't be it, right?
+
+You're right -- that's not it. Layouts actually set the `x` and `y` properties of components, so setting them yourself will just be overwritten.
+
+This is where a bit of jank comes in. You can use the child's margins to offset the position from the top-left corner.
+
+So, instead of doing something like:
+
+```lua
+component.x = 100
+component.y = 200
+```
+
+You'd do something like:
+
+```lua
+component:setMargins(100, 200, 0, 0)
+```
+
+This... is not ideal, but it works. You're not really supposed to manually position components, but it's possible.
+
+</Box>
+
+<Box>
+## Input, menus, and all that jazz
+---
+
+Okay, okay, enough with the boring stuff. We want to actually make a menu.
+
+Let's start with the basics: input. How do we get input?
+
+### Input, focusing, and the focus stack
+
+When you focus a component, it'll receive input. Simple, right? But how do you focus a component?
+
+Also simple -- [`component:setFocused()`](/wiki/api/Component#setFocused).
+
+But what if multiple things want to be focused? Well, that's where the **focus stack** comes in.
+
+Basically, only one thing can be focused at a time. But let's say you have a menu, that goes into another menu.
+That first menu gets focused, and then you open the second menu through it. Then, that second menu gains focus.
+But, while that first menu is no longer focused, it's still in the **focus stack**. That means, the moment the second menu disappears,
+the first menu will regain focus! No longer will you have to worry about input being sent to multiple things at once.
+
+### "Hurry up and show us how to make a menu already!"
+
+Let's start with the basics. We'll make a menu with two options: "Play" and "Quit".
+
+Let's use our centered component code from earlier:
+
+```lua
+
+
+local outer = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
+    outer:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
+    local inner = Component(FillSizing(), FitSizing()) -- Stretch horizontally, fit to content vertically
+        inner:setLayout(HorizontalLayout({ gap = 0, align = "center" })) -- Center it horizontally!
+
+        -- anything we add to inner will be centered horizontally
+    outer:addChild(inner) -- Add the inner component to the outer component!
+Game.stage:addChild(outer) -- Add it to the stage!
+```
+
+Now, let's add a box! Like, that fancy box that DELTARUNE uses.
+
+```lua
+
+local box = BoxComponent(FitSizing()) -- make the box fit to its contents
+
+```
+
+And then let's add the actual menu inside of it, with a few items:
+
+```lua
+
+local menu = BasicMenuComponent(FitSizing(), FixedSizing(240))
+menu:setLayout(VerticalLayout({ gap = 0, align = "start" }))
+
+menu:addChild(TextMenuItemComponent("Option 1", function() print("Option 1 was selected!") end))
+menu:addChild(TextMenuItemComponent("Option 2", function() print("Option 2 was selected!") end))
+menu:addChild(TextMenuItemComponent("Option 3", function() print("Option 3 was selected!") end))
+menu:addChild(TextMenuItemComponent("Option 4", function() print("Option 4 was selected!") end))
+menu:addChild(TextMenuItemComponent("Option 5", function() print("Option 5 was selected!") end))
+
+menu:setFocused()
+
+```
+
+Perfect! Putting that all together, we get:
+
+```lua
+
+local outer = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
+    outer:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
+    local inner = Component(FillSizing(), FitSizing()) -- Stretch horizontally, fit to content vertically
+        inner:setLayout(HorizontalLayout({ gap = 0, align = "center" })) -- Center it horizontally!
+        -- anything we add to inner will be centered horizontally
+
+        local box = BoxComponent(FitSizing())
+            local menu = BasicMenuComponent(FitSizing())
+                menu:setLayout(VerticalLayout({ gap = 0, align = "start" }))
+                menu:addChild(SoulMenuItemComponent(Text("Option 1"), function() print("Option 1 was selected!") end))
+                menu:addChild(SoulMenuItemComponent(Text("Option 2"), function() print("Option 2 was selected!") end))
+                menu:addChild(SoulMenuItemComponent(Text("Option 3"), function() print("Option 3 was selected!") end))
+                menu:addChild(SoulMenuItemComponent(Text("Option 4"), function() print("Option 4 was selected!") end))
+                menu:addChild(SoulMenuItemComponent(Text("Option 5"), function() print("Option 5 was selected!") end))
+
+                menu:setFocused()
+            box:addChild(menu)
+        inner:addChild(box)
+    outer:addChild(inner) -- Add the inner component to the outer component!
+Game.stage:addChild(outer) -- Add it to the stage!
+
+```
+
+Now, since the menu is focused, you can use the arrow keys to navigate it, and press **confirm** to select an option!
+
+</Box>
+
+<Box>
+## The docs aren't working yet, so what're the components?
+---
+
+Glad you asked.
+
+<div className={styles.tree}>
+### [`Component`](/wiki/api/Component)
+- [`AbstractMenuComponent`](/wiki/api/AbstractMenuComponent) - Base menu component
+  - [`BasicMenuComponent`](/wiki/api/BasicMenuComponent) - Basic menu which uses arrow keys and confirm/cancel
+  - [`EasingSoulMenuComponent`](/wiki/api/EasingSoulMenuComponent) - Menu which uses a soul that eases between items
+- [`AbstractMenuItemComponent`](/wiki/api/AbstractMenuItemComponent) - Base menu item component
+  - [`SoulMenuItemComponent`](/wiki/api/SoulMenuItemComponent) - Menu item which uses a soul to indicate selection, can be combined with `EasingSoulMenuComponent`
+  - [`TextMenuItemComponent`](/wiki/api/TextMenuItemComponent) - Menu item which is just text, by default turns yellow when selected
+  - [`TextInputComponent`](/wiki/api/TextInputComponent) - Menu item which is a text input
+  - [`ListMenuItemComponent`](/wiki/api/ListMenuItemComponent) - Menu item which is a list of items
+    - [`ArrowListMenuItemComponent`](/wiki/api/ArrowListMenuItemComponent) - Menu item which is a list of items, with arrows
+    - [`IntegerListMenuItemComponent`](/wiki/api/IntegerListMenuItemComponent) - Menu item which is a range of integers
+        - [`ArrowIntegerListMenuItemComponent`](/wiki/api/ArrowIntegerListMenuItemComponent) - Menu item which is a range of integers, with arrows
+  - [`BooleanMenuItemComponent`](/wiki/api/BooleanMenuItemComponent) - Menu item which is a toggle
+  - [`LabelMenuItemComponent`](/wiki/api/LabelMenuItemComponent) - Menu item which is a label for its child, passes focus to its child
+- [`BoxComponent`](/wiki/api/BoxComponent) - A UI box
+- [`MainMenuBoxComponent`](/wiki/api/MainMenuBoxComponent) - A UI box style used in the main menu
+- [`Bar`](/wiki/api/Bar) - A progress bar
+- [`Scrollbar`](/wiki/api/Scrollbar) - A scrollbar, can be attached to scrolling objects like menus
+- [`Separator`](/wiki/api/Separator) - A separator, can be vertical
+
+### [`Layout`](/wiki/api/Layout)
+- [`HorizontalLayout`](/wiki/api/HorizontalLayout)
+- [`VerticalLayout`](/wiki/api/VerticalLayout)
+
+### [`Sizing`](/wiki/api/Sizing)
+- [`FixedSizing`](/wiki/api/FixedSizing)
+- [`FillSizing`](/wiki/api/FillSizing)
+- [`FitSizing`](/wiki/api/FitSizing)
+
+</div>
+
+</Box>
+
+<Box>
+## Examples?
+---
+
+Menu with scrollbar, easing, and a lot of item types, submenu, and paginated scrolling:
+
+```lua
+local soul = Game.stage:addChild(EasingSoul(0, 0))
+soul.use_parent = true
+
+local outer = Component(FixedSizing(640, 480))
+    outer:setLayout(VerticalLayout({ gap = 0, align = "center" }))
+    outer:setOverflow("hidden")
+    local inner = Component(FillSizing(), FitSizing())
+        inner:setLayout(HorizontalLayout({ gap = 0, align = "center" }))
+        local box = MainMenuBoxComponent(FitSizing())
+            local menu = EasingSoulMenuComponent(FitSizing(), FixedSizing(240), { hold = true, soul = soul })
+                menu.open_sound = "ui_move"
+                menu:setScrollbar(ScrollbarComponent({gutter = "dotted", margins = {8, 0, 0, 0}, arrows = true}))
+                menu:setLayout(VerticalLayout({ gap = 0, align = "start" }))
+                menu:setOverflow("scroll")
+                menu:setScrollType("paged")
+
+                menu:addChild(LabelMenuItemComponent("Label: ", IntegerMenuItemComponent(1, 10, 1), FillSizing(), FitSizing()))
+                menu:addChild(SeparatorComponent())
+                menu:addChild(TextInputComponent())
+                menu:addChild(BooleanMenuItemComponent(false, function(value) end))
+                menu:addChild(ListMenuItemComponent({ "List Option 1", "List Option 2", "List Option 300" }, 1, function(index) end))
+                menu:addChild(ArrowListMenuItemComponent({ "List Option 1", "List Option 2", "List Option 300" }, 1, function(index) end))
+                menu:addChild(IntegerMenuItemComponent(1, 10, 1, function(value) end))
+                menu:addChild(IntegerMenuItemComponent(1, 10, 1, function(value) end, {wrap = false, hold = true}))
+                menu:addChild(ArrowIntegerMenuItemComponent(1, 10, 1, function(value) end))
+                menu:addChild(ArrowIntegerMenuItemComponent(1, 10, 1, function(value) end, {wrap = false, hold = true}))
+                -- recreate the deltarune volume controller
+                menu:addChild(ArrowIntegerMenuItemComponent(0, 100, 60, function(value) Kristal.setVolume(value / 100) end, {step = 2, suffix = "%", sound = "noise", wrap = false, hold = true, sound_delay = 3, sound_at_limit = true}))
+                menu:addChild(TextMenuItemComponent(Text("Option"),
+                    function()
+                        menu.visible = false
+                        local menu2 = EasingSoulMenuComponent(FitSizing(), FitSizing(), { hold = true, soul = soul })
+                        menu2:setLayout(VerticalLayout())
+                        menu2:addChild(TextMenuItemComponent(Text("Option 1"), function() end))
+                        menu2:addChild(TextMenuItemComponent(Text("Option 2"), function() end))
+                        menu2:setCancelCallback(function()
+                            menu2:close()
+                            menu.visible = true
+                        end)
+                        menu2:setFocused()
+                        box:addChild(menu2)
+                    end, {highlight=false}
+                ))
+                menu:setSelected(2)
+                menu:setFocused()
+            box:addChild(menu)
+        inner:addChild(box)
+    outer:addChild(inner)
+Game.stage:addChild(outer)
+```
 
 </Box>
