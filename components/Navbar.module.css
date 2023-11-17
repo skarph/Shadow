@@ -38,3 +38,18 @@
 .item:hover {
     color: yellow;
 }
+
+@media screen and (max-width: 768px) {
+
+    .navbar {
+        height: 64px;
+    }
+
+    .navbar_inner {
+        width: 100%;
+    }
+
+    .item {
+        font-size: 16px;
+    }
+}

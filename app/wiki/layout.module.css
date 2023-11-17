@@ -18,5 +18,31 @@
 }
 
 .main {
-    padding: 6rem;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    max-width: 1024px;
+    width: 100%;
+    margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: auto;
+        width: 100%;
+        margin-bottom: 1rem;
+        overflow-y: scroll;
+        max-height: 25vh;
+    }
+
+    .main {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
 }
