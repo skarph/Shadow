@@ -1,4 +1,5 @@
 import styles from './layout.module.css'
+import Box from 'components/Box';
 
 export const metadata = {
   title: 'Kristal Wiki',
@@ -18,7 +19,7 @@ export default function RootLayout({children}) {
             </ul>
         </div>
         <main className={styles.main}>
-          {children}
+            {children}
         </main>
     </div>
   )

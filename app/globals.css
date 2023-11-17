@@ -27,6 +27,11 @@ body {
   -webkit-font-smoothing: none;
 }
 
+strong, b {
+  font-weight: unset;
+  font-family: "8bitOperatorPlus-Bold", monospace;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: "8bitOperatorPlus-Bold", monospace;
 }
@@ -46,4 +51,10 @@ hr {
   border-width: 1px;
   border-color: white;
   border-style: solid;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
