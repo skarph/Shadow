@@ -13,7 +13,7 @@ It allows you to create custom UIs such as menus, HUDs, and more.
 
 ---
 
-A UI is made up of **components**. A component is a single piece of the UI.
+A UI is made up of **components**. A component is a single piece of the UI. Think of them as [objects](/wiki/objects), but more advanced.
 
 Let's take the main menu as an example. The soul is a component, each menu item is a component, and the Kristal logo is a component.
 
@@ -22,7 +22,7 @@ You can even __create your own components__ if required, which is more than like
 
 There are many types of components, but they all have a few things in common:
 - They all have a parent, except for the **root component**.
-- They can all have children.
+- They can all have children, like any other object.
 - They all have sizings.
 - They all have margins and paddings.
 
@@ -82,11 +82,71 @@ You'd want the menu item to stretch horizontally to fit the menu, but you'd want
 
 ---
 
-Phew, that was a long one. Why don't we make something now?
+### Layouts
+
+Basically, a layout is a way to position child components inside of a component.
+
+There's two different layout types, [`HorizontalLayout`](/wiki/api/HorizontalLayout) and [`VerticalLayout`](/wiki/api/VerticalLayout).
+When creating a layout, you're able to specify options for it, like the gap between components, or the alignment.
+
+There's six alignment modes:
+- `"start"`: Aligns the components to the start of the component.
+- `"center"`: Aligns the components to the center of the component.
+- `"end"`: Aligns the components to the end of the component.
+- `"space-between"`: Aligns the components evenly. The first and last components are flush with the start and end of the layout.
+- `"space-around"`: Aligns the components evenly. Acts as if there's invisible spacing around each component.
+- `"space-evenly"`: Aligns the components evenly. The same spacing is used everywhere, including the first and last components.
+
+That's a bit confusing, so here's visual examples:
+
+<div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+
+<div>
+#### `"start"`
+![](/wiki/alignment_start.png)
+</div>
+
+<div>
+#### `"center"`
+![](/wiki/alignment_center.png)
+</div>
+
+<div>
+#### `"end"`
+![](/wiki/alignment_end.png)
+</div>
+
+<div>
+#### `"space-between"`
+![](/wiki/alignment_space_between.png)
+</div>
+
+<div>
+#### `"space-around"`
+![](/wiki/alignment_space_around.png)
+</div>
+
+<div>
+#### `"space-evenly"`
+![](/wiki/alignment_space_evenly.png)
+</div>
+
+</div>
+
+---
+
+Finally, it's time to make something!
 </Box>
 
 <Box>
 ## Making a new UI
+---
+
+Just kidding! We're not ready to make something yet.
+
+Wait. Nevermind. We are.
+
+---
 
 Making a UI is simple. You just need to create a component, and then add it somewhere.
 
@@ -97,8 +157,20 @@ If it can be *anywhere*, at *any time*, try [`Game.stage`](/wiki/api/Game#stage)
 Now, once you've created your component, and added it to something, you just need to focus it.
 
 ```lua
-local root = Component(FixedSizing(320, 240)) -- The root should be a fixed size.
-Game.world:addChild(root)
+local root = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
+root:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
+root:addChild(Text("Hello, world!")) -- Add a text object to it!
+Game.stage:addChild(root) -- Add it to the world!
 ```
+
+Assuming you run this in a black void, you should see the following result:
+
+![](/wiki/hello_world.png)
+
+Perfect! Our component is 640x480, and the child is centered vertically!
+
+Turning on debug rendering will help a little in understanding what's going on:
+
+![](/wiki/hello_world_debug.png)
 
 </Box>
