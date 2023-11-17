@@ -58,18 +58,18 @@ In Kristal, turning on **debug rendering** will show you the margins and padding
 
 Sizings determine the size of a component. There's a horizontal sizing and a vertical sizing.
 
-#### `FixedSizing(number size, number? size_2)`
+#### [`FixedSizing(number size, number? size_2)`](/wiki/api/FixedSizing)
 This sizing is simple. It makes the component a fixed size which will not change.
 
 If `size_2` is provided, the sizing will assume that `size` is the width and `size_2` is the height.
 
 This means that `FixedSizing(100, 100)` is the same as `FixedSizing(100)`.
 
-#### `FillSizing()`
+#### [`FillSizing()`](/wiki/api/FillSizing)
 This sizing makes the component "fill" the parent component -- it will be the same size as the parent,
 minus any paddings the parent has, and minus any margins the component has.
 
-#### `FitSizing()`
+#### [`FitSizing()`](/wiki/api/FitSizing)
 This sizing makes the component shrink or grow to fit to its contents.
 
 ---
@@ -79,4 +79,26 @@ An example of using both `FillSizing` and `FitSizing` is a menu item.
 You'd want the menu item to stretch horizontally to fit the menu, but you'd want the height to be the same as whatever's inside the menu item, such as text.
 
 ![](/wiki/menu_option_example.png)
+
+---
+
+Phew, that was a long one. Why don't we make something now?
+</Box>
+
+<Box>
+## Making a new UI
+
+Making a UI is simple. You just need to create a component, and then add it somewhere.
+
+If you're in the overworld, add it to [`Game.world`](/wiki/api/Game#world)! In a battle, try [`Game.battle`](/wiki/api/Game#battle).
+
+If it can be *anywhere*, at *any time*, try [`Game.stage`](/wiki/api/Game#stage).
+
+Now, once you've created your component, and added it to something, you just need to focus it.
+
+```lua
+local root = Component(FixedSizing(320, 240)) -- The root should be a fixed size.
+Game.world:addChild(root)
+```
+
 </Box>

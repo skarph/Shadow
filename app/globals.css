@@ -62,3 +62,11 @@ p {
 img {
   max-width: 100%;
 }
+
+li {
+  margin-left: 2rem;
+}
+
+li::marker {
+  color: lightslategray;
+}

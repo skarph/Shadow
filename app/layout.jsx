@@ -10,6 +10,9 @@ export const metadata = {
 export default function RootLayout({children}) {
   return (
     <html lang="en">
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css"/>
+      </head>
       <body>
         <Navbar/>
         <main className={styles.main}>
