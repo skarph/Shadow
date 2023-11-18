@@ -4,7 +4,10 @@ import Navbar from 'components/Navbar'
 
 export const metadata = {
   title: 'Kristal',
-  description: 'A powerful DELTARUNE fangame engine.'
+  description: 'A powerful DELTARUNE fangame engine.',
+  twitter: {
+    card: "summary",
+  },
 }
 
 export default function RootLayout({children}) {
