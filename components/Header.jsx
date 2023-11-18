@@ -1,0 +1,49 @@
+import Link from "next/link";
+
+export default function Header(props) {
+    // get text content from props.children
+    if (typeof props.children === "string") {
+        let transformed = props.children.toString()
+        // transform text to be a valid id (spaces replaced with dashes, lowercase, anything in parentheses removed, alphanumeric characters only)
+
+        // but first, if there's text inside of square brackets, let's transform THAT instead
+
+        let original = transformed.replaceAll(/\[.*\]/g, (match) => {
+            transformed = match
+            return ""
+        })
+        original = original.trim()
+        console.log(original)
+
+
+        transformed = transformed
+            .replaceAll(" ", "-")
+            .toLowerCase()
+            .replaceAll(/\(.*\)/g, "")
+            .replaceAll(/[^a-z0-9-]/g, "")
+        // return a link with the transformed text as the id
+
+        switch (props.level) {
+            case 1: return <h1 {...props}><a href={`#${transformed}`} id={transformed}>{original}</a></h1>
+            case 2: return <h2 {...props}><a href={`#${transformed}`} id={transformed}>{original}</a></h2>
+            case 3: return <h3 {...props}><a href={`#${transformed}`} id={transformed}>{original}</a></h3>
+            case 4: return <h4 {...props}><a href={`#${transformed}`} id={transformed}>{original}</a></h4>
+            case 5: return <h5 {...props}><a href={`#${transformed}`} id={transformed}>{original}</a></h5>
+            case 6: return <h6 {...props}><a href={`#${transformed}`} id={transformed}>{original}</a></h6>
+        }
+        return <h1 {...props}/>
+    }
+    else
+    {
+        switch (props.level)
+        {
+            case 1: return <h1 {...props}/>
+            case 2: return <h2 {...props}/>
+            case 3: return <h3 {...props}/>
+            case 4: return <h4 {...props}/>
+            case 5: return <h5 {...props}/>
+            case 6: return <h6 {...props}/>
+        }
+        return <h1 {...props}/>
+    }
+}

@@ -139,7 +139,7 @@ Finally, it's time to make something!
 </Box>
 
 <Box>
-## Making a new UI
+## Making a UI
 ---
 
 Making a UI is simple. You just need to create a component, and then add it somewhere.
@@ -167,7 +167,7 @@ Turning on debug rendering will help a little in understanding what's going on:
 
 ![](/wiki/hello_world_debug.png)
 
-### "What do you mean centered? It's at the left!"
+### "What do you mean centered? It's at the left!" [vertically-centered]
 
 This is a **vertical layout**, therefore it's centered vertically.
 Vertical layouts don't touch horizontal alignment at all.
@@ -193,7 +193,7 @@ And with debug rendering:
 
 ![](/wiki/hello_world_2_debug.png)
 
-### "Wait, hold on, I'm confused. What's going on?"
+### "Wait, hold on, I'm confused. What's going on?" [centering-explanation]
 
 Let's break it down.
 
@@ -220,13 +220,13 @@ That... was a lot of work, though. Is there anything we can do differently?
 </Box>
 
 <Box>
-## No, and here's why
+## No, and here's why [why-centering-is-hard]
 ---
 
 Anything powerful needs to be complicated. That's just how it is.
 Sure, we could make a million different layout types, but how would that interact with wrappin- oh no.
 
-### Wrapping, where are you?
+### Wrapping, where are you? [no-wrapping]
 If you try to cram too many components into another component, it'll start to wrap. Ideally. In reality, it'll just overflow.
 
 ![](/wiki/overflow.png)
@@ -255,7 +255,7 @@ This overflow mode will let you scroll the component.
 
 ---
 
-### "You keep talking about wrapping, or a lack thereof. Just get to the point already!"
+### "You keep talking about wrapping, or a lack thereof. Just get to the point already!" [no-wrapping-explanation]
 
 Fine, fine. Wrapping is complicated. It's not something you can just add, and it'll work perfectly. There's a lot of things to consider.
 
@@ -265,7 +265,7 @@ If you need wrapping, maybe it's a good idea to manually position your component
 </Box>
 
 <Box>
-## Manual positioning of components
+## Manual positioning of components [manual-component-positioning]
 ---
 
 Ever wonder what happens if you don't call `component:setLayout(layout)`? Well, simple, it doesn't have a layout.
@@ -301,7 +301,7 @@ This... is not ideal, but it works. You're not really supposed to manually posit
 </Box>
 
 <Box>
-## Input, menus, and all that jazz
+## Input, menus, and all that jazz [input-and-menus]
 ---
 
 Okay, okay, enough with the boring stuff. We want to actually make a menu.
@@ -321,7 +321,7 @@ That first menu gets focused, and then you open the second menu through it. Then
 But, while that first menu is no longer focused, it's still in the **focus stack**. That means, the moment the second menu disappears,
 the first menu will regain focus! No longer will you have to worry about input being sent to multiple things at once.
 
-### "Hurry up and show us how to make a menu already!"
+### "Hurry up and show us how to make a menu already!" [menu-guide]
 
 Let's start with the basics. We'll make a menu with two options: "Play" and "Quit".
 
@@ -397,7 +397,7 @@ Now, since the menu is focused, you can use the arrow keys to navigate it, and p
 </Box>
 
 <Box>
-## The docs aren't working yet, so what're the components?
+## The docs aren't working yet, so what're the components? [components]
 ---
 
 Glad you asked.
@@ -437,7 +437,7 @@ Glad you asked.
 </Box>
 
 <Box>
-## Examples?
+## Examples? [examples]
 ---
 
 Menu with scrollbar, easing, and a lot of item types, submenu, and paginated scrolling:
@@ -446,52 +446,45 @@ Menu with scrollbar, easing, and a lot of item types, submenu, and paginated scr
 local soul = Game.stage:addChild(EasingSoul(0, 0))
 soul.use_parent = true
 
-local outer = Component(FixedSizing(640, 480))
-    outer:setLayout(VerticalLayout({ gap = 0, align = "center" }))
-    outer:setOverflow("hidden")
-    local inner = Component(FillSizing(), FitSizing())
-        inner:setLayout(HorizontalLayout({ gap = 0, align = "center" }))
-        local box = MainMenuBoxComponent(FitSizing())
-            local menu = EasingSoulMenuComponent(FitSizing(), FixedSizing(240), { hold = true, soul = soul })
-                menu.open_sound = "ui_move"
-                menu:setScrollbar(ScrollbarComponent({gutter = "dotted", margins = {8, 0, 0, 0}, arrows = true}))
-                menu:setLayout(VerticalLayout({ gap = 0, align = "start" }))
-                menu:setOverflow("scroll")
-                menu:setScrollType("paged")
+local box = MainMenuBoxComponent(FitSizing())
+    local menu = EasingSoulMenuComponent(FitSizing(), FixedSizing(240), { hold = true, soul = soul })
+        menu.open_sound = "ui_move"
+        menu:setScrollbar(ScrollbarComponent({gutter = "dotted", margins = {8, 0, 0, 0}, arrows = true}))
+        menu:setLayout(VerticalLayout({ gap = 0, align = "start" }))
+        menu:setOverflow("scroll")
+        menu:setScrollType("paged")
 
-                menu:addChild(LabelMenuItemComponent("Label: ", IntegerMenuItemComponent(1, 10, 1), FillSizing(), FitSizing()))
-                menu:addChild(SeparatorComponent())
-                menu:addChild(TextInputComponent())
-                menu:addChild(BooleanMenuItemComponent(false, function(value) end))
-                menu:addChild(ListMenuItemComponent({ "List Option 1", "List Option 2", "List Option 300" }, 1, function(index) end))
-                menu:addChild(ArrowListMenuItemComponent({ "List Option 1", "List Option 2", "List Option 300" }, 1, function(index) end))
-                menu:addChild(IntegerMenuItemComponent(1, 10, 1, function(value) end))
-                menu:addChild(IntegerMenuItemComponent(1, 10, 1, function(value) end, {wrap = false, hold = true}))
-                menu:addChild(ArrowIntegerMenuItemComponent(1, 10, 1, function(value) end))
-                menu:addChild(ArrowIntegerMenuItemComponent(1, 10, 1, function(value) end, {wrap = false, hold = true}))
-                -- recreate the deltarune volume controller
-                menu:addChild(ArrowIntegerMenuItemComponent(0, 100, 60, function(value) Kristal.setVolume(value / 100) end, {step = 2, suffix = "%", sound = "noise", wrap = false, hold = true, sound_delay = 3, sound_at_limit = true}))
-                menu:addChild(TextMenuItemComponent(Text("Option"),
-                    function()
-                        menu.visible = false
-                        local menu2 = EasingSoulMenuComponent(FitSizing(), FitSizing(), { hold = true, soul = soul })
-                        menu2:setLayout(VerticalLayout())
-                        menu2:addChild(TextMenuItemComponent(Text("Option 1"), function() end))
-                        menu2:addChild(TextMenuItemComponent(Text("Option 2"), function() end))
-                        menu2:setCancelCallback(function()
-                            menu2:close()
-                            menu.visible = true
-                        end)
-                        menu2:setFocused()
-                        box:addChild(menu2)
-                    end, {highlight=false}
-                ))
-                menu:setSelected(2)
-                menu:setFocused()
-            box:addChild(menu)
-        inner:addChild(box)
-    outer:addChild(inner)
-Game.stage:addChild(outer)
+        menu:addChild(LabelMenuItemComponent("Label: ", IntegerMenuItemComponent(1, 10, 1), FillSizing(), FitSizing()))
+        menu:addChild(SeparatorComponent())
+        menu:addChild(TextInputComponent())
+        menu:addChild(BooleanMenuItemComponent(false, function(value) end))
+        menu:addChild(ListMenuItemComponent({ "List Option 1", "List Option 2", "List Option 300" }, 1, function(index) end))
+        menu:addChild(ArrowListMenuItemComponent({ "List Option 1", "List Option 2", "List Option 300" }, 1, function(index) end))
+        menu:addChild(IntegerMenuItemComponent(1, 10, 1, function(value) end))
+        menu:addChild(IntegerMenuItemComponent(1, 10, 1, function(value) end, {wrap = false, hold = true}))
+        menu:addChild(ArrowIntegerMenuItemComponent(1, 10, 1, function(value) end))
+        menu:addChild(ArrowIntegerMenuItemComponent(1, 10, 1, function(value) end, {wrap = false, hold = true}))
+        -- recreate the deltarune volume controller
+        menu:addChild(ArrowIntegerMenuItemComponent(0, 100, 60, function(value) Kristal.setVolume(value / 100) end, {step = 2, suffix = "%", sound = "noise", wrap = false, hold = true, sound_delay = 3, sound_at_limit = true}))
+        menu:addChild(TextMenuItemComponent(Text("Option"),
+            function()
+                menu.visible = false
+                local menu2 = EasingSoulMenuComponent(FitSizing(), FitSizing(), { hold = true, soul = soul })
+                menu2:setLayout(VerticalLayout())
+                menu2:addChild(TextMenuItemComponent(Text("Option 1"), function() end))
+                menu2:addChild(TextMenuItemComponent(Text("Option 2"), function() end))
+                menu2:setCancelCallback(function()
+                    menu2:close()
+                    menu.visible = true
+                end)
+                menu2:setFocused()
+                box:addChild(menu2)
+            end, {highlight=false}
+        ))
+        menu:setSelected(2)
+        menu:setFocused()
+    box:addChild(menu)
+Game.stage:addChild(box)
 ```
 
 </Box>
