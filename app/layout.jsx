@@ -5,6 +5,18 @@ import Navbar from 'components/Navbar'
 export const metadata = {
   title: 'Kristal',
   description: 'A powerful DELTARUNE fangame engine.',
+  metadataBase: process.env.BASE_URL,
+  openGraph: {
+    url: "/",
+    images: [
+      {
+        url: "/square_logo.png",
+        width: 512,
+        height: 512,
+        alt: "Kristal Logo"
+      }
+    ]
+  },
   twitter: {
     card: "summary",
   },
