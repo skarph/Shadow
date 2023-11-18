@@ -4,7 +4,7 @@ export default function Header(props) {
     // get text content from props.children
     if (typeof props.children === "string") {
         let transformed = props.children.toString()
-        // transform text to be a valid id (spaces replaced with dashes, lowercase, anything in parentheses removed, alphanumeric characters only)
+        // transform text to be a valid id (spaces replaced with dashes, lowercase, alphanumeric characters only)
 
         // but first, if there's text inside of square brackets, let's transform THAT instead
 
@@ -13,13 +13,10 @@ export default function Header(props) {
             return ""
         })
         original = original.trim()
-        console.log(original)
-
 
         transformed = transformed
             .replaceAll(" ", "-")
             .toLowerCase()
-            .replaceAll(/\(.*\)/g, "")
             .replaceAll(/[^a-z0-9-]/g, "")
         // return a link with the transformed text as the id
 

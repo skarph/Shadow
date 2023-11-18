@@ -33,7 +33,7 @@ To download a beta release, go to the [releases page](https://github.com/Kristal
 ## Nightly releases
 ---
 
-To download a beta release, download the archive from [this URL](https://nightly.link/KristalTeam/Kristal/workflows/ci/main/output.zip). You can then extract the archive and run the executable.
+To download a beta release, download the archive from [here](https://nightly.link/KristalTeam/Kristal/workflows/ci/main/output.zip). You can then extract the archive and run the executable.
 </Box>
 
 <Box>
@@ -44,8 +44,63 @@ There are multiple ways to use the source code, but both require installing [LÖ
 
 Once LÖVE is installed, you can either use [Git](https://git-scm.com/) or download the source code as a ZIP archive.
 
-### Using Git (Recommended)
+---
 
+### Using Git (Recommended) [using-git]
 
+First, you need to install Git.
+You can download it from [here](https://git-scm.com/downloads).
+Once Git is installed,
+you have to open a terminal in the folder where you want to download Kristal.
+
+If you are on Windows, you can right-click in the folder and select "Git Bash Here".
+Otherwise, you can open a terminal and use the `cd` command to navigate to the folder.
+
+Next, you have to clone the repository. That can be done with the following command:
+
+```bash
+git clone https://github.com/KristalTeam/Kristal
+```
+
+This will download the source code to the folder you are in,
+and set it up to allow future updates, and even contributions to Kristal if you feel like it!
+
+Finally, you can [run Kristal](#running-kristal-from-sources).
+
+---
+
+### Downloading the source code as a ZIP archive (NOT RECOMMENDED) [using-zip]
+
+To download the source code as a ZIP archive, go to the [repository page](https://github.com/KristalTeam/Kristal) and click on the green "Code" button.
+Then, click on "Download ZIP". You can then extract the archive in the folder of your choice.
+
+Finally, you can [run Kristal](#running-kristal-from-sources).
+</Box>
+
+<Box>
+## Running Kristal from sources
+
+This part of the guide assumes you've followed the previous steps,
+and now have Kristal's code on your computer.
+
+Now, locate where your LÖVE executable is.
+On Windows, it should be located at `C:\Program Files\LOVE\`.
+
+Next, click on the Kristal folder, and drag it onto the LÖVE executable, `love.exe`. This should open Kristal.
+
+Alternatively, you can open a terminal in the Kristal folder, and run the following command:
+
+```bash
+"C:\\Program Files\\LOVE\\love.exe" .
+```
+
+If you're doing mod development, a useful resource is **the output console**. To open it, use `lovec` instead of `love`.
+
+</Box>
+
+<Box>
+## Next Steps
+
+Congratulations, you've successfully opened Kristal! Now, you can move on to [playing mods](/wiki/playing-mods), or [learning how to make them](/wiki/reading-docs)!
 
 </Box>
