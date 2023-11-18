@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { TYPES, sanitizeLink } from 'src/docparser.js';
 import { parse } from 'src/markdown.js';
 import Box from 'components/Box';
-const util = require('util')
+//const util = require('util')
 
 export async function generateStaticParams() {
     const types = TYPES
@@ -39,7 +39,7 @@ export default async function Api({ params }) {
         if (field.extends.type == "function")
         {
             methods.push(field);
-            console.log(util.inspect(field, {showHidden: false, depth: null, colors: true}))
+            //console.log(util.inspect(field, {showHidden: false, depth: null, colors: true}))
         }
         else
         {
