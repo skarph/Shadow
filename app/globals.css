@@ -102,7 +102,15 @@ table, th, td, tr {
   max-width: 100%;
 }
 
+.smaller-table-text td {
+  font-size: 16px;
+}
+
 td, th {
   word-wrap: break-word;
   word-break: break-word;
+}
+
+thead {
+  font-family: "8bitOperatorPlus-Bold", monospace;
 }

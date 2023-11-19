@@ -7,7 +7,7 @@ export const metadata = {
 
 # Configurable Features
 
-<Box>
+<Box className="smaller-table-text">
 
 ![](/wiki/feature_config.png)
 
@@ -18,27 +18,27 @@ You can change each feature individually through the feature config menu.
 
 | Key                      | Feature                    | Description                                                                        | Ch. 1          | Ch. 2          |
 | ------------------------ | -------------------------- | ---------------------------------------------------------------------------------- | -------------- | -------------- |
-| `enableStorage`          | Enable Storage             | Extra 48-slot item storage                                                         | False          | **True**       |
-| `smallSaveMenu`          | Small Save Menu            | Single-file save menu  with no storage/recruits options                            | **True**       | False          |
-| `partyActions`           | X-Actions                  | Whether X-Actions appear in spell menu by default                                  | False          | **True**       |
-| `growStronger`           | Grow Stronger              | Stat increases after defeating an enemy with violence                              | False          | **True**       |
-| `growStrongerChara`      | Grow Stronger Character    | The character who grows stronger if they're in the party                           | Unset          | **"noelle"**   |
-| `susieStyle`             | Susie Style                | What sprite set Susie should use                                                   | **1**          | **2**              |
-| `ralseiStyle`            | Ralsei Style               | What sprite set Ralsei should use                                                  | **1**          | **2**              |
-| `oldTensionBar`          | Old Tension Bar            | Whether the Tension Bar uses blocky corners or not                                 | **True**       | False          |
-| `oldUIPositions`         | Old UI Positions           | Whether to use Chapter 1 positions of UI elements or not                           | **True**       | False          |
-| `oldGameOver`            | Old Game Over              | Whether to use Chapter 1 game over or not                                          | **True**       | False          |
-| `targetSystem`           | Targeting System           | Whether battles should use the targeting system or not                             | **True**       | False          |
-| `speechBubble`           | Speech Bubble Style        | The default style for enemy speech bubbles                                         | "round"        | **"cyber"**    |
-| `enemyAuras`             | Enemy Aura                 | The red aura around enemies                                                        | False          | **True**       |
-| `mercyMessages`          | Mercy Messages             | Seeing +X% when an enemy's mercy goes up                                           | False          | **True**       |
-| `mercyBar`               | Mercy Bar                  | Whether the mercy bar should appear or not                                         | False          | **True**       |
-| `enemyBarPercentages`    | Stat Bar Percentages       | Whether the HP and Mercy bars should show percentages                              | False          | **True**       |
-| `prioritySpareableText`  | Priority Spareable Text    | Whether enemies' spareable text should be prioritized over tired / low-health text | **True**       | False          |
-| `pushBlockInputLock`     | Push Block Input Locking   | Whether pushing a block should freeze the player                                   | **True**       | **True**       |
+| `enableStorage`          | Enable Storage             | Extra 48-slot item storage                                                         | False          | True           |
+| `smallSaveMenu`          | Small Save Menu            | Single-file save menu  with no storage/recruits options                            | True           | False          |
+| `partyActions`           | X-Actions                  | Whether X-Actions appear in spell menu by default                                  | False          | True           |
+| `growStronger`           | Grow Stronger              | Stat increases after defeating an enemy with violence                              | False          | True           |
+| `growStrongerChara`      | Grow Stronger Character    | The character who grows stronger if they're in the party                           | Unset          | "noelle"       |
+| `susieStyle`             | Susie Style                | What sprite set Susie should use                                                   | 1              | 2              |
+| `ralseiStyle`            | Ralsei Style               | What sprite set Ralsei should use                                                  | 1              | 2              |
+| `oldTensionBar`          | Old Tension Bar            | Whether the Tension Bar uses blocky corners or not                                 | True           | False          |
+| `oldUIPositions`         | Old UI Positions           | Whether to use Chapter 1 positions of UI elements or not                           | True           | False          |
+| `oldGameOver`            | Old Game Over              | Whether to use Chapter 1 game over or not                                          | True           | False          |
+| `targetSystem`           | Targeting System           | Whether battles should use the targeting system or not                             | True           | False          |
+| `speechBubble`           | Speech Bubble Style        | The default style for enemy speech bubbles                                         | "round"        | "cyber"        |
+| `enemyAuras`             | Enemy Aura                 | The red aura around enemies                                                        | False          | True           |
+| `mercyMessages`          | Mercy Messages             | Seeing +X% when an enemy's mercy goes up                                           | False          | True           |
+| `mercyBar`               | Mercy Bar                  | Whether the mercy bar should appear or not                                         | False          | True           |
+| `enemyBarPercentages`    | Stat Bar Percentages       | Whether the HP and Mercy bars should show percentages                              | False          | True           |
+| `prioritySpareableText`  | Priority Spareable Text    | Whether enemies' spareable text should be prioritized over tired / low-health text | True           | False          |
+| `pushBlockInputLock`     | Push Block Input Locking   | Whether pushing a block should freeze the player                                   | True           | True           |
 | `keepTensionAfterBattle` | Keep Tension After Battle  | Whether TP should be kept after battle instead of reset                            | False          | False          |
-| `overworldSpells`        | Overworld Spells           | Whether spells should be usable in the overworld                                   | **True**       | False          |
-| `damageUnderflowFix`     | Damage Underflow Fix       | If disabled, negative enemy damage heals the enemy                                 | **True**       | **True**       |
+| `overworldSpells`        | Overworld Spells           | Whether spells should be usable in the overworld                                   | True           | False          |
+| `damageUnderflowFix`     | Damage Underflow Fix       | If disabled, negative enemy damage heals the enemy                                 | True           | True           |
 | `darkCurrency`           | Dark World Currency        | The full currency name for the Dark World                                          | "Dark Dollars" | "Dark Dollars" |
 | `darkCurrencyShort`      | Dark World Currency Short  | The short currency name for the Dark World                                         | "D$"           | "D$"           |
 | `lightCurrency`          | Light World Currency       | The full currency name for the Light World                                         | "Money"        | "Money"        |
