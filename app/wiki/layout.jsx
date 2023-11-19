@@ -16,8 +16,7 @@ export default function RootLayout({children}) {
           <ul>
             <li><Link href="/wiki/downloading">Downloading Kristal</Link></li>
             <li><Link href="/wiki/playing-mods">Installing and Playing Mods</Link></li>
-            <li><Link href="/wiki/reading-docs">Reading Documentation</Link></li>
-            <li><Link href="/wiki/creating-a-project">Creating a Project</Link></li>
+            <li><Link href="/wiki/creating-a-mod">Creating a Mod</Link></li>
             <li><Link href="/wiki/ui">The UI System</Link></li>
           </ul>
           <br/>
