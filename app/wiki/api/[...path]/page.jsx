@@ -47,7 +47,7 @@ export default async function Api({ params }) {
         }
     }
 
-    return <div key={type.name}>
+    return <div>
         <h2>{type.name}</h2>
         <hr/>
         <p>{type.desc}</p>
@@ -67,7 +67,7 @@ export default async function Api({ params }) {
                             }
                             else
                             {
-                                return <span key={arg.name}>
+                                return <span key={`${arg.name}_${index}`} style={{color: "lightgray"}}>
                                     <span style={{color: "lightgray"}}>{arg.name}</span>
                                     <span style={{color: "gray"}}>: </span>
                                     <span style={{color: "hotpink"}}>{arg.view}</span>
@@ -79,47 +79,58 @@ export default async function Api({ params }) {
                     }
                     <span style={{color: "gray"}}>)</span>
                     </h3>
-                    <span style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(method.desc)}}></span>
+                    <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(method.desc)}}></div>
                     { method.extends.args.length > 0 && !(method.extends.args[0].name == "self" && method.extends.args.length == 1) &&
                         <>
                             <p>Arguments:</p>
-                            <ul>
-                            {
-                                method.extends.args.map(async (arg, index) => {
-                                    if (index == 0 && arg.name == "self") {
-                                        // imagine this is a continue
-                                    }
-                                    else
-                                    {
-                                        return <li key={arg.name}>
-                                            <span style={{color: "hotpink"}}>{arg.name}</span>
-                                            <span style={{color: "lightgray"}}>: </span>
-                                            <span style={{color: "hotpink"}}>{arg.view}</span>
-                                            <span style={{color: "lightgray"}}> - </span>
-                                            <span style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(arg.desc)}}></span>
-                                        </li>
-                                    }
-                                })
-                            }
-                            </ul>
+                            <table>
+                                <tbody>
+                                {
+                                    await Promise.all(method.extends.args.map(async (arg, index) => {
+                                        if (index == 0 && arg.name == "self") {
+                                            // imagine this is a continue
+                                            return <></>
+                                        }
+                                        else
+                                        {
+                                            return <tr key={arg.name}>
+                                                <td>
+                                                    <span style={{color: "hotpink"}}>{arg.name}</span>
+                                                    <span style={{color: "lightgray"}}>: </span>
+                                                    <span style={{color: "hotpink"}}>{arg.view}</span>
+                                                </td>
+                                                <td>
+                                                    <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(arg.desc)}}></div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }))
+                                }
+                                </tbody>
+                            </table>
                         </>
                     }
                     {
                         method.extends.returns && method.extends.returns.length > 0 && <>
                             <p>Returns: </p>
-                            <ul>
+                            <table>
+                                <tbody>
                                 {
-                                    method.extends.returns.map(async (ret, index) => {
-                                        return <li key={index}>
-                                            <span style={{color: "hotpink"}}>{ret.name}</span>
-                                            <span style={{color: "lightgray"}}>: </span>
-                                            <span style={{color: "hotpink"}}>{ret.view}</span>
-                                            <span style={{color: "lightgray"}}> - </span>
-                                            <span style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(ret.desc)}}></span>
-                                        </li>
-                                    })
+                                    await Promise.all(method.extends.returns.map(async (ret, index) => {
+                                        return <tr key={index}>
+                                            <td>
+                                                <span style={{color: "hotpink"}}>{ret.name}</span>
+                                                <span style={{color: "lightgray"}}>: </span>
+                                                <span style={{color: "hotpink"}}>{ret.view}</span>
+                                            </td>
+                                            <td>
+                                                <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(ret.desc)}}></div>
+                                            </td>
+                                        </tr>
+                                    }))
                                 }
-                            </ul>
+                                </tbody>
+                            </table>
                         </>
                     }
                 </Box>

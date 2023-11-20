@@ -103,10 +103,14 @@ table, th, td, tr {
 }
 
 td, th {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   word-break: break-word;
 }
 
 thead {
   font-family: "8bitOperatorPlus-Bold", monospace;
+}
+
+pre {
+  text-wrap: balance;
 }

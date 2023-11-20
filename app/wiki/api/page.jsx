@@ -17,9 +17,9 @@ export default async function Api() {
     const types = TYPES
 
     return (
-        <div>{types.map(async (type) => {
+        <div>{types.map((type) => {
             return <div key={type.name}>
-                <Link href={`/wiki/api/${type.name}`} className={styles.type}><h2>{type.name}</h2></Link>
+                <h2><Link href={`/wiki/api/${type.name}`} className={styles.type}>{type.name}</Link></h2>
                 <hr/>
                 <p>{type.desc}</p>
             </div>

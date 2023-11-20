@@ -20,7 +20,7 @@ export default function RootLayout({children}) {
             <li><Link href="/wiki/ui">The UI System</Link></li>
           </ul>
           <br/>
-          <h3><Link href="/wiki/ui">API Reference</Link></h3>
+          <h3><Link href="/wiki/api">API Reference</Link></h3>
       </div>
       <main className={styles.main}>
           {children}
