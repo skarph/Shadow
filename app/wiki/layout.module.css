@@ -4,19 +4,6 @@
     width: 100%;
 }
 
-.sidebar {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    position: sticky;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    align-self: start;
-}
-
 .main {
     padding-top: 6rem;
     padding-bottom: 6rem;
@@ -28,17 +15,6 @@
 @media screen and (max-width: 768px) {
     .container {
         display: block;
-    }
-
-    .sidebar {
-        position: relative;
-        top: 0;
-        left: 0;
-        height: auto;
-        width: 100%;
-        margin-bottom: 1rem;
-        overflow-y: scroll;
-        max-height: 25vh;
     }
 
     .main {

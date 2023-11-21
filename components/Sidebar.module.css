@@ -1,0 +1,38 @@
+.sidebar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    position: sticky;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-self: start;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: auto;
+        width: 100%;
+        margin-bottom: 1rem;
+        overflow-y: scroll;
+        max-height: 25vh;
+    }
+}
+
+.sidebar a {
+    color: rgba(0, 200, 200, 1);
+}
+
+.sidebar a:hover {
+    color: rgba(0, 255, 255, 1);
+}
+
+.sidebar p {
+    color: lightgray;
+    font-size: 16px;
+}
