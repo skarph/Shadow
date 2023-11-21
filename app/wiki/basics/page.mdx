@@ -55,12 +55,14 @@ end
 return Car
 ```
 
-Making a new instance of the class is as simple as calling `Car()`.
+Making a new instance of the class is as simple as calling `Car()`. When you create a new instance, the `init` function is called. This is where you'd set up the instance.
 
 ```lua
 local new_car = Car() -- creates a new instance of the car class, or more simply, creates a new car.
+
 print(new_car:getWheelCount()) -- prints "4"
 print(new_car.color) -- prints "red"
+
 new_car:setColor("blue") -- sets the color of the car to blue
 print(new_car.color) -- prints "blue"
 ```
@@ -81,7 +83,7 @@ local Racecar, super = Class(Car)
 return Racecar
 ```
 
-We've just made another class, which is a child of the `Car` class. Despite not having any functions in the code above, it still has all of the functions of the `Car` class:
+We've just made another class, which is an extension of the `Car` class. Despite not having any functions in the code above, it still has all of the functions of the `Car` class:
 
 ```lua
 local new_racecar = Racecar()
@@ -123,9 +125,7 @@ The stage is a special object. It's the only object which doesn't have a parent.
 
 Objects have some very important functions. The most important ones are `update` and `draw`.
 
-Update is called every frame, so it's where you'd put code which needs to be ran every frame. Simple, right?
-
-Update is where you'd move something across the screen, or check if a button is pressed, or anything else which needs to be done every frame.
+Update is called every frame, so it's where you'd put code which needs to be ran every frame. Simple, right? It's where you'd move something across the screen, or check if a button is pressed, or anything else which needs to be done every frame.
 
 Draw is called every frame, too. This is where you actually render stuff to the screen! You can draw images, shapes, text, and more.
 </Box>
