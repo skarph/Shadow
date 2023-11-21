@@ -154,7 +154,7 @@ Now, select the **Insert Rectangle** tool, which you can find in the toolbar at 
 
 ![](/wiki/insert_rectangle.png)
 
-This is one of the tools you'll be using to draw collision. It's pretty simple, just click and drag to make a rectangle. Make sure to hold `CTRL` to make it snap to the grid!
+This is one of the tools you'll be using to draw collision. It's pretty simple, just click and drag to make a rectangle. **Make sure to hold `CTRL` to make it snap to the grid!**
 
 ![](/wiki/added_collision.png)
 
@@ -214,7 +214,7 @@ Perfect!
 
 ### Creating Events
 
-Events are just objects which extend the [Event](/wiki/api/Event) class. You can make your own events by creating a new file in `scripts/world/events`, and extending the `Event` class. Let's make an event which is... a pinwheel! And let's make it spin when you interact with it!
+Events are just [objects](/wiki/basics#objects) which extend the [Event](/wiki/api/Event) class. You can make your own events by creating a new file in `scripts/world/events`, and extending the `Event` class. Let's make an event which is... a pinwheel! And let's make it spin when you interact with it!
 
 Here's the sprites I made, although they're not very good:
 
@@ -225,12 +225,15 @@ And here's the code I ended up making:
 
 ```lua
 -- Extend the Event class, and set the ID to "pinwheel"
+-- This is what you'll use to refer to the event in Tiled
 local PinwheelEvent, super = Class(Event, "pinwheel")
 
 -- `data` is the data directly from Tiled
 function PinwheelEvent:init(data)
     -- Place the event at the correct position, and make the size 20x20
     super.init(self, data.x, data.y, 20, 20, data)
+
+    -- Any custom properties are stored in `data.properties`, but we don't use any.
 
     -- Just some variables for the pinwheel
     self.min_speed = 2
@@ -277,6 +280,10 @@ end
 
 return PinwheelEvent
 ```
+
+Then we just have to place it somewhere, using the ID we supplied in the code, `pinwheel`!
+
+![](/wiki/pinwheel_placed.png)
 
 After all this, we have our own event!
 
