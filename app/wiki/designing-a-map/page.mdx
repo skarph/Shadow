@@ -1,0 +1,140 @@
+import Box from 'components/Box'
+
+export const metadata = {
+    title: 'Designing a Map',
+    description: 'Learn how to design a map for Kristal.',
+}
+
+# Designing a Map
+
+<Box>
+
+Maps are complex, filled with many different things. Therefore, it needs a powerful tool to design them. That's why we use [Tiled](https://www.mapeditor.org/).
+
+</Box>
+
+<Box>
+## Installing Tiled
+---
+
+Tiled is available for all major platforms. You can download it from [here](https://www.mapeditor.org/). There's no Kristal extension for Tiled yet, so that's all you need to do.
+</Box>
+
+<Box>
+## Opening Your Project
+---
+
+Once you've installed Tiled, you can open your project. You can do this by clicking on `File`, and then `Open File or Project`.
+
+![](/wiki/tiled_open.png)
+
+Now, navigate to your mod's folder. You should find a file called `<your-mod>.tiled-project`. Open it.
+
+The project window on the left should now show a folder tree. This is your project. You can open any map by double-clicking on it! Feel free to mess around with them, because in the next section, **we're deleting them.**
+
+</Box>
+
+<Box>
+## Creating Tilesets
+---
+
+Let's delete everything.
+
+![](/wiki/delete_maps.png)
+
+Now, we have nothing! Perfect state to start from.
+
+First, we need to create a tileset. A tileset is, as the name suggests, a set of tiles. Every map is made up of tiles! Let's use this one:
+
+![](/wiki/example_tileset.png)
+
+It's... not the greatest, but it'll get the job done. Let's save this in the folder `assets/sprites/tilesets`, as `example_tileset.png`. **It's very important that you use this directory for your tileset images.**
+
+Now, let's create the tileset.
+
+![](/wiki/new_tileset.png)
+
+Let's name it `example_tileset`. The tile width and height should be `20`, and the margin and spacing should be `0`. Click browse, and locate the tileset image we just saved. You should have the following settings:
+
+![](/wiki/new_tileset_filled.png)
+
+Click **Save As...** and save it to `scripts/world/tilesets` as `example_tileset.tsx`. **It's also very important that you use this directory for your tilesets.**
+
+Now that the tileset is created, we need to do one last step. Open the tileset properties.
+
+![](/wiki/tileset_properties.png)
+
+Change **Tile Render Size** to `Map Grid Size`. This will make the tiles render at the size we want them to. Now, click **Save**.
+
+Once everything's saved, press `CTRL+E` to **export** the tileset. You have to export it every time you make a change to it, otherwise the changes won't be applied.
+
+Make sure to export it as a `.lua` file in the same directory as the `.tsx` file. So, in this case, `scripts/world/tilesets/example_tileset.lua`.
+
+If you get tired of having to export after every save, you can enable this in the preferences:
+
+![](/wiki/preferences.png)
+
+But anyway, we have a tileset now! So why don't we create a map now?
+</Box>
+
+<Box>
+## Creating a Map
+---
+
+Here's where the fun begins.
+
+Create a new map by going to `File`, then `New`, then `New Map...`. Make sure the orientation is `Orthogonal`,
+tile layer format is `CSV`, and tile render order is `Right Down`.
+
+Also make the tile size `40x40`. You'll notice this is twice the size of the tiles in our tileset. This is because Deltarune actually upscales tiles by 2x! Since we don't want to do that manually, we'll just let Tiled make them bigger for us!
+
+Map size should be Fixed, with a width of `16`, and a height of `12`. Those are the minimum dimensions for a map, since that's the size of the screen. It can be bigger, if you wish, but for this tutorial, let's just stay with 16x12.
+
+After clicking OK, this should take you to an empty map. First thing we'll want to do is save it into our project. Go to `File`, then `Save As...`. Save it to `scripts/world/maps` as `example_map.tmx`. **It's very important that you use this directory for your maps.** You probably get that by now.
+
+Now, you can place down tiles! Make anything you'd like, and don't forget to keep saving! Here's what I made:
+
+![](/wiki/example_map.png)
+
+It's... a huge bone? I don't know. It's not important. What is important is that you save your map, and that you're happy with it.
+
+---
+
+### Markers
+
+Markers are a very important part of maps. They're used to mark things like spawn points, and just general points of interest. Let's add a marker to our map.
+
+First, we'll have to make a new layer, named `markers`.
+
+![](/wiki/new_object_layer.png)
+
+Us Kristal devs really like when they're purple (it helps us know the layer at a glance), but you can make them any color you want.
+
+![](/wiki/purple_color.png)
+
+To place down a point, use the Insert Point tool, which you can find in the toolbar at the top, or by pressing `I`.
+
+![](/wiki/insert_point.png)
+
+Now, click anywhere on the map. A point should appear. This is a marker! We're trying to make the player's spawn point right now, so name it `spawn`.
+
+![](/wiki/example_map_with_spawn_marker.png)
+
+Now, let's test in-game! Save your map, and then press `CTRL+E` to export it. Yep, you have to export maps as well. Make sure it's a `.lua` file!
+
+Now, open your mod in Kristal. If you get the following error, don't worry! We just need to change something we forgot to.
+
+![](/wiki/room1_error.png)
+
+This means that Kristal is trying to load a map, called `room1`, that **doesn't exist**. That makes sense, because we deleted `room1` earlier. Let's tell Kristal to load our map instead.
+
+In `mod.json`, change `"map": "room1"` to `"map": "example_map"`. Now, save the file, and try again. It should work! And look at that, our spawnpoint is working, too!
+
+![](/wiki/working_spawnpoint.png)
+
+---
+
+### TODO
+
+So you made it to the end, huh? Well, there's still a lot to learn. This tutorial is still a work in progress, so check back later for more! Here's some bananas 🍌🍌🍌🍌🍌🍌🍌 you've been banana'd lol
+</Box>
