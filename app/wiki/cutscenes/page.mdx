@@ -1,0 +1,82 @@
+import Box from 'components/Box'
+
+export const metadata = {
+    title: 'Cutscenes',
+    description: 'Everything you need to know about cutscenes.',
+}
+
+# Cutscenes
+
+<Box>
+This tutorial assumes you have read the previous ones. If you haven't, please do so before continuing.
+
+Let's make a simple cutscene, where:
+
+- The player walks to the center of the room
+- The screen fades to black
+- A textbox appears
+- An impact sound plays
+- The screen fades back in
+
+That's just a set of instructions, isn't it? In order? Yeah, that's pretty much what cutscenes are in code as well!
+
+Let's start by marking the center of the room. Remember markers?
+
+![](/wiki/room_center.png)
+
+Let's also place down a `script` object. This'll trigger our cutscene when the player touches it.
+
+![](/wiki/placed_script.png)
+
+As you can see, we gave it the cutscene ID `examples.center`. This means it'll play the `center` cutscene from the `examples` group!
+
+Now, let's make the `examples` group. We'll do this by creating an `examples.lua` file in the `scripts/world/cutscenes` folder.
+
+Let's slap a table in there:
+
+```lua
+return {
+
+}
+```
+
+Now we're ready to start our cutscene! Remember, we named it `center`, so let's do that:
+
+```lua
+return {
+    center = function(cutscene, event)
+
+    end
+}
+```
+
+Woah, what'd we just do?
+
+We just created `center` in the `examples` group, which is a function that takes two arguments: `cutscene` and `event`. `cutscene` is the cutscene object, and `event` is the event object, aka what triggered the cutscene.
+
+Now, let's script the cutscene!
+
+```lua
+return {
+    center = function(cutscene, event)
+        -- make kris walk to the "room_center" marker, taking 1 second, and wait until they're done
+        cutscene:wait(cutscene:walkTo("kris", "room_center", 1))
+        -- fade the screen to black
+        cutscene:wait(cutscene:fadeOut(1))
+        -- show a textbox
+        cutscene:text("* ...")
+        -- play the impact sound
+        Assets.playSound("impact")
+        -- wait 1 second
+        cutscene:wait(1)
+        -- fade the screen back in
+        cutscene:wait(cutscene:fadeIn(1))
+    end
+}
+```
+
+Seems pretty simple, right? The cutscene system is much, much more powerful than this, but it's a good start.
+
+For more information, check out the API reference pages for [cutscenes](/wiki/api/Cutscene), [world cutscenes](/wiki/api/WorldCutscene), and [battle cutscenes](/wiki/api/BattleCutscene).
+
+</Box>
