@@ -130,12 +130,80 @@ You'll want to set `self.heal_amount` to the amount you want the item to heal th
 ## Armor
 ---
 
-TODO, check out the `data/items` folder for examples
+Here's everything special in the white ribbon:
+
+```lua
+self.type = "armor"
+self.icon = "ui/menu/icon/armor"
+-- Equip bonuses (for weapons and armor)
+self.bonuses = {
+    defense = 2
+}
+-- Bonus name and icon (displayed in equip menu)
+self.bonus_name = "Cuteness"
+self.bonus_icon = "ui/menu/icon/up"
+
+-- Equippable characters (default true for armors, false for weapons)
+self.can_equip = {
+    susie = false
+}
+```
+
+Bonuses is a simple table, taking `defense`, `magic` and `attack`, all optional keys.
 </Box>
 
 <Box>
 ## Weapons
 ---
 
-TODO, check out the `data/items` folder for examples
+Here's some code from the EverybodyWeapon, an unused weapon:
+
+```lua
+self.type = "weapon"
+self.icon = nil
+
+-- Equip bonuses (for weapons and armor)
+self.bonuses = {
+    attack  = 12,
+    defense = 6,
+    magic   = 8,
+}
+
+-- No special bonus
+self.bonus_name = nil
+self.bonus_icon = nil
+
+-- Everyone can equip
+self.can_equip = {}
+```
+
+</Box>
+
+<Box>
+## Key Items
+---
+
+Code from the cell phone:
+```lua
+self.type = "key"
+```
+
+...Yep, that's all you need to do.
+
+</Box>
+
+<Box>
+## Reactions
+---
+
+When you use an item, or equip one, characters might react. This is done with the `self.reactions` table. Taking a look at the EverybodyWeapon again, we get:
+
+```lua
+-- Character reactions
+self.reactions = {
+    susie = "Uhhh... Ok.",
+    ralsei = "A perfect fit!",
+    noelle = "Wh... what is this?",
+}
+```
 </Box>
