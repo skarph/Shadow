@@ -333,8 +333,6 @@ Let's start with the basics. We'll make a menu with two options: "Play" and "Qui
 Let's use our centered component code from earlier:
 
 ```lua
-
-
 local outer = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
     outer:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
     local inner = Component(FillSizing(), FitSizing()) -- Stretch horizontally, fit to content vertically
@@ -348,15 +346,12 @@ Game.stage:addChild(outer) -- Add it to the stage!
 Now, let's add a box! Like, that fancy box that DELTARUNE uses.
 
 ```lua
-
 local box = BoxComponent(FitSizing()) -- make the box fit to its contents
-
 ```
 
 And then let's add the actual menu inside of it, with a few items:
 
 ```lua
-
 local menu = BasicMenuComponent(FitSizing(), FixedSizing(240))
 menu:setLayout(VerticalLayout({ gap = 0, align = "start" }))
 
@@ -367,13 +362,11 @@ menu:addChild(TextMenuItemComponent("Option 4", function() print("Option 4 was s
 menu:addChild(TextMenuItemComponent("Option 5", function() print("Option 5 was selected!") end))
 
 menu:setFocused()
-
 ```
 
 Perfect! Putting that all together, we get:
 
 ```lua
-
 local outer = Component(FixedSizing(640, 480)) -- The root should be a fixed size.
     outer:setLayout(VerticalLayout({ gap = 0, align = "center" })) -- Center it vertically!
     local inner = Component(FillSizing(), FitSizing()) -- Stretch horizontally, fit to content vertically
@@ -394,10 +387,17 @@ local outer = Component(FixedSizing(640, 480)) -- The root should be a fixed siz
         inner:addChild(box)
     outer:addChild(inner) -- Add the inner component to the outer component!
 Game.stage:addChild(outer) -- Add it to the stage!
-
 ```
 
 Now, since the menu is focused, you can use the arrow keys to navigate it, and press **confirm** to select an option!
+
+</Box>
+
+<Box>
+## The characters can move while the menu is open! [characters-moving-while-menu-open]
+---
+
+Use [`World:openMenu`](/wiki/api/World#openMenu) to open a menu instead!
 
 </Box>
 

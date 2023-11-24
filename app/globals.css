@@ -37,12 +37,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "8bitOperatorPlus-Bold", monospace;
 }
 
-a {
+a, a code {
   color: rgba(0, 200, 200, 1);
   text-decoration: none;
 }
 
-a:hover {
+a:hover, a:hover code {
   color: rgba(0, 255, 255, 1);
 }
 
@@ -126,4 +126,8 @@ pre {
 
 code {
   text-wrap: balance;
+  color: #c9d1d9;
+  background: #0d1117;
+  border-radius: 4px;
+  padding: 2px;
 }
