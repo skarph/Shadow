@@ -10,9 +10,52 @@
 .section {
   margin-top: 64px;
   max-width: 80%;
-  min-width: 40%;
+  width: 64rem;
 }
 
 .header {
   text-align: center;
+}
+
+.screenshot_info {
+  display: flex;
+  flex-direction: column;
+}
+
+.screenshot {
+  width: 320px;
+  height: 240px;
+  transition: 0.2s;
+}
+
+.screenshot:hover {
+  transform: scale(1.1);
+}
+
+.screenshots {
+  display: grid;
+  grid-gap: 4rem;
+  grid-template-columns: 32fr 32fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.screenshots > :nth-child(odd)
+{
+  text-align: right;
+  justify-self: end;
+}
+
+.screenshots > :nth-child(even)
+{
+  justify-self: start;
+  text-align: left;
+}
+
+.screenshot_title {
+  font-family: "8bitOperatorPlus-Bold", monospace;
+}
+
+.screenshot_author {
+  color: lightgray;
 }
