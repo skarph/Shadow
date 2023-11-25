@@ -37,6 +37,22 @@ export default function Home() {
             page: "https://gamejolt.com/games/missinglight/799416",
             author: "DiamondBor",
             author_link: "https://www.youtube.com/channel/UCs76CI1gJeWx77sSTCCbICA"
+        },
+        {
+            title: "Frozen Heart",
+            description: "The end of the Snowgrave Route seen from another place. While Kris gets torn to pieces by a bootleg Mettaton NEO, Susie have to face Noelle, lost in the trance of the Thorn Ring, before she freezes her to death! And who knows, maybe the situation can get even worse than that?",
+            image: "/screenshots/frozen_heart.png",
+            page: "https://gamejolt.com/games/frozen-heart/659908",
+            author: "Simbel",
+            author_link: "https://www.youtube.com/@Simbel"
+        },
+        {
+            title: "Deltamon",
+            description: "Explore the vast reigon that Kris calls home as you aid them in becoming champion! Your rivals Susie Noelle and Berdly join alongside you to see and catch over 200+ pokemon from Kanto to Paldea!",
+            image: "/screenshots/deltamon_neo.png",
+            page: null,
+            author: "Riverstar",
+            author_link: "https://twitter.com/NoahLuc60171586"
         }
     ]
 
