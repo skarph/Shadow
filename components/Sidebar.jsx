@@ -19,6 +19,7 @@ export default function Sidebar(props) {
         <ul>
             <li><Link href="/wiki/basics">Understanding the Basics</Link></li>
             <li><Link href="/wiki/creating-a-mod">Creating a Mod</Link></li>
+            <li><Link href="/wiki/using-libraries">Using Libraries</Link></li>
             <li><Link href="/wiki/designing-a-map">Designing a Map</Link></li>
             <li><Link href="/wiki/cutscenes">Cutscenes</Link></li>
             <li><Link href="/wiki/creating-an-item">Creating an Item</Link></li>
