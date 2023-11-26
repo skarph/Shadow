@@ -50,7 +50,7 @@ export default async function Api({ params }) {
     return <div>
         <h2>{type.name}</h2>
         <hr/>
-        <p>{type.desc}</p>
+        <p>{type.rawdesc || type.desc}</p>
         {
             methods.map(async (method) => {
                 return <><br/>
@@ -79,7 +79,7 @@ export default async function Api({ params }) {
                     }
                     <span style={{color: "gray"}}>)</span>
                     </h3>
-                    <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(method.desc)}}></div>
+                    <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(method.rawdesc || method.desc)}}></div>
                     { method.extends.args.length > 0 && !(method.extends.args[0].name == "self" && method.extends.args.length == 1) &&
                         <>
                             <p>Arguments:</p>
@@ -100,7 +100,7 @@ export default async function Api({ params }) {
                                                     <span style={{color: "hotpink"}}>{arg.view}</span>
                                                 </td>
                                                 <td>
-                                                    <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(arg.desc)}}></div>
+                                                    <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(arg.rawdesc || arg.desc)}}></div>
                                                 </td>
                                             </tr>
                                         }
@@ -124,7 +124,7 @@ export default async function Api({ params }) {
                                                 <span style={{color: "hotpink"}}>{ret.view}</span>
                                             </td>
                                             <td>
-                                                <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(ret.desc)}}></div>
+                                                <div style={{color: "lightgray"}} dangerouslySetInnerHTML={{__html: await parse(ret.rawdesc || ret.desc)}}></div>
                                             </td>
                                         </tr>
                                     }))

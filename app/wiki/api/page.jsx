@@ -21,7 +21,7 @@ export default async function Api() {
             return <div key={type.name}>
                 <h2><Link href={`/wiki/api/${type.name}`} className={styles.type}>{type.name}</Link></h2>
                 <hr/>
-                <p>{type.desc}</p>
+                <p>{type.rawdesc || type.desc}</p>
             </div>
         })}</div>
     )
