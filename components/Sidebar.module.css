@@ -9,6 +9,19 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     align-self: start;
+    overflow-y: scroll;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 1);
 }
 
 @media screen and (max-width: 768px) {

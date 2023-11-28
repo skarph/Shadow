@@ -27,6 +27,7 @@ export default function Sidebar(props) {
             <li><Link href="/wiki/actors">Actors</Link></li>
             <li><Link href="/wiki/party-members">Party Members</Link></li>
             <li><Link href="/wiki/battlers">Battlers</Link></li>
+            <li><Link href="/wiki/encounters">Encounters</Link></li>
             <li><Link href="/wiki/ui">The UI System</Link></li>
         </ul>
         <br/>
