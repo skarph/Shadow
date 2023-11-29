@@ -98,6 +98,22 @@ print(x)
 
 This will print out `Hello!`. This is because we stored the string `Hello!` in the variable `x`, and then printed it out.
 
+But what happens if we put nothing in them? Or, how we even do that? Well, that's where `nil` comes in:
+
+```lua
+local x
+print(x) -- prints nil
+
+-- OR --
+
+local x = 10
+print(x) -- prints 10
+x = nil
+print(x) -- prints nil
+```
+
+`nil` is the absence of a value.
+
 ---
 
 ### Comments
@@ -188,7 +204,6 @@ local x = true   -- true
 And then we can use it in an `if` statement:
 
 ```lua
-
 local x = 5 > 10 -- false
 if x then
     print("5 is greater than 10!")
@@ -410,7 +425,6 @@ We've been using the keyword `local` all over the place, what gives?
 Well, `local` is used to make a variable local to a scope. A scope is a chunk of code. For example:
 
 ```lua
-
 local x = 5
 
 if true then
@@ -453,5 +467,203 @@ That's it for the basics! You can now make simple programs, and you know how to 
 <Box>
 ## PART 2: The Intermediate
 
-no
+---
+
+We've already gone over tables, and even had two sections of them in the last part. They can't have much more, right?
+
+Well, here's an entire part dedicated to them. Oh boy.
+
+---
+
+### Tables, Continued, Continued
+
+You don't always have to loop through a table by using a `for` loop and an index. You can also use `ipairs`:
+
+```lua
+local x = {
+    "One",
+    "Two",
+    "Three"
+}
+
+for index, value in ipairs(x) do
+    print(index, value)
+end
+```
+
+This gives us the following output:
+
+```lua
+1	One
+2	Two
+3	Three
+```
+
+Which is exactly what we wanted. `ipairs` is used to loop through a table, and get the index and value of each item.
+
+If your table has keys, you can use `pairs`:
+
+```lua
+local x = {
+    one = "One",
+    two = "Two",
+    three = "Three"
+}
+
+for key, value in pairs(x) do
+    print(key, value)
+end
+```
+
+Which gives us:
+
+```lua
+two     Two
+three   Three
+one     One
+```
+
+That's... interesting. It wasn't in order! That's because tables are not guaranteed to be in any sort of order.
+
+Due to the nature of list-like tables, those'll always be in order. But tables with keys are not guaranteed to be in any sort of order.
+
+---
+
+### Functions in Tables
+
+Tables can store functions. For example:
+
+```lua
+local x = {
+    add = function(a, b)
+        return a + b
+    end,
+    subtract = function(a, b)
+        return a - b
+    end
+}
+```
+
+Pretty simple, right? We just call them like this:
+
+```lua
+print(x.add(5, 10))
+print(x.subtract(5, 10))
+```
+
+This prints out `15` and `-5`, respectively.
+
+---
+
+### Class-Like Tables
+
+Since there's no class system in Lua, tables themselves are used as classes. For example:
+
+```lua
+local x = {
+    name = "Bob",
+    age = 10,
+    sayHello = function(self)
+        print("Hello, my name is " .. self.name .. "!")
+    end
+}
+
+x:sayHello()
+```
+
+This prints out `Hello, my name is Bob!`. But what's with the colon (`:`)? Well, that's used to pass the table as the first argument to the function. This is called syntactic sugar. It's just a shortcut for this:
+
+```lua
+x.sayHello(x)
+```
+
+This is the exact same as the example above. It's just a shortcut.
+
+---
+
+### Varargs, Multiple Returns, and Destructuring
+
+Functions can return multiple values. For example:
+
+```lua
+local function addAndSubtract(a, b)
+    return a + b, a - b
+end
+
+local x, y = addAndSubtract(5, 10)
+print(x, y)
+```
+
+This prints out `15 -5`. This is because the function returns two values, `a + b` and `a - b`. We can store these values in two variables, `x` and `y`, and then print them out.
+
+But what if we only want one of the values? Well, we can use `_` to ignore the value:
+
+```lua
+local x, _ = addAndSubtract(5, 10)
+print(x)
+```
+
+This prints out `15`. This is because we ignored the second value, and only stored the first one.
+
+(Technically, it's not ignored. It's stored in a variable called `_`, which is just a variable name. It's just standard practice to do this.)
+
+Now, we come to varargs. Varargs are used to pass an unknown amount of arguments to a function. For example:
+
+```lua
+local function add(...)
+    local total = 0
+    for _, value in ipairs({...}) do
+        total = total + value
+    end
+    return total
+end
+
+print(add(1, 2, 3, 4, 5))
+```
+
+This prints out `15`. This is because we passed 5 arguments to the function, and it added them all together.
+
+We can use `...` in the following ways:
+
+```lua
+-- Pass in all of the arguments to another function
+
+local function test(...)
+    print(...)
+end
+
+-- Convert the multiple arguments into a table
+local function test(...)
+    local x = {...}
+    print(x[1])
+end
+
+-- "Destructure" the arguments
+local function test(...)
+    local x, y, z = ...
+    print(x, y, z)
+end
+```
+
+Destructuring is getting the first few arguments, and ignoring the rest. We actually did destructuring earlier, did you notice?
+
+```lua
+local function addAndSubtract(a, b)
+    return a + b, a - b
+end
+
+local x, y = addAndSubtract(5, 10)
+print(x, y)
+```
+
+This is destructuring the return values of the function. We're getting the first two values, and ignoring the rest. In this case, there are only two values, so we're getting all of them.
+
+</Box>
+
+<Box>
+## PART 3: The Advanced
+
+---
+
+Metatables, metamethods, threads, coroutines, garbage collection
 </Box>
