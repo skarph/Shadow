@@ -62,9 +62,9 @@ function parseTypes(view){
     strs = strs.map( (str) => str.split(/:|>/)[1] || str )
     return strs.map( (str, i) => 
         (hoverText[str])
-        ? <span className = {styles.syntaxTypeMod} title = {hoverText[str]}>{str}</span>
+        ? <span key={str} className = {styles.syntaxTypeMod} title = {hoverText[str]}>{str}</span>
         //check outgoing links v 
-        : <a className = {styles.syntaxType} href = { outgoingLinks[str] ||tryGetLoveWiki(str) ||("/wiki/api/" + str) }><span>{str}</span></a>
+        : <a key={str} className = {styles.syntaxType} href = { outgoingLinks[str] ||tryGetLoveWiki(str) ||("/wiki/api/" + str) }><span>{str}</span></a>
     )
 }
 export default async function Api({ params }) {
@@ -117,7 +117,7 @@ export default async function Api({ params }) {
             </h1>
             <h4>
             {classHeirarchy.map( (cls, index) => 
-                    <span style={{color: "gray"}}>
+                    <span key={cls.name} style={{color: "gray"}}>
                     {index === 0 ? "┗> " : " > "}
                     <a href={"/wiki/api/" + cls.name}>{cls.name}</a>
                     </span>
