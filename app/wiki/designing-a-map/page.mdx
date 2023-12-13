@@ -212,6 +212,24 @@ Perfect!
 
 ---
 
+### Room Transitions
+
+Room transitions are events, so the last section applies to them as well.
+
+They're called `transition`, and can take the following properties, which are all optional:
+
+- `map` -> The map to transition to
+- `shop` -> The shop to transition to
+- `x` -> The X position to spawn at
+- `y` -> The Y position to spawn at
+- `marker` -> The marker to spawn at
+- `facing` -> The direction to face when spawning in a map
+- `stairs` -> Whether to play the stairs sound or not
+
+Most of the time, you should probably use the `marker` property instead of specifying `x` and `y`.
+
+---
+
 ### Creating Events
 
 Events are just [objects](/wiki/basics#objects) which extend the [Event](/wiki/api/Event) class. You can make your own events by creating a new file in `scripts/world/events`, and extending the `Event` class. Let's make an event which is... a pinwheel! And let's make it spin when you interact with it!
