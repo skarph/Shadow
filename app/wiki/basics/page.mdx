@@ -70,6 +70,10 @@ return Car
 
 Making a new instance of the class is as simple as calling `Car()`. When you create a new instance, the `init` function is called. This is where you'd set up the instance.
 
+`self` is a special variable, which refers to the instance itself. So, setting `self.color` sets the color *of that instance*.
+
+`super` is also a special variable, and it refers to the **parent class**. We'll talk about parents and inheritance later.
+
 ```lua
 local new_car = Car() -- creates a new instance of the car class, or more simply, creates a new car.
 
@@ -102,6 +106,24 @@ We've just made another class, which is an extension of the `Car` class. Despite
 local new_racecar = Racecar()
 print(new_racecar:getWheelCount()) -- prints "4"
 ```
+
+Now, remember the `super` variable from earlier? We can use it to call functions from the parent class if we override them.
+
+```lua
+local Racecar, super = Class(Car)
+
+function Racecar:init()
+    super.init(self)
+
+    self.color = "blue"
+end
+
+return Racecar
+```
+
+The above example calls the `init` function of the parent class, `Car`, and then sets the color of the racecar instance to blue.
+
+**Super functions should be called with a period, not a colon! They should also take in `self` as the first argument!**
 
 </Box>
 
