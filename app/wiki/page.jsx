@@ -20,7 +20,7 @@ export default function Page({
         <hr/>
         <ol>
             {searchQuery(searchParams.search).map(p => (
-            <li> 
+            <li key={p.name}>
                 <Link href = {p.route ?? ("/wiki/api/"+p.name) }>
                     <h3 style={{display: "inline"}}>{p.display_title ?? p.title}</h3>
                     <div>{p.description}</div>
