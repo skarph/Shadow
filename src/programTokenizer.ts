@@ -1,4 +1,4 @@
-import type {ITokenizer} from 'js-search/source/Tokenizer/Tokenizer.js';
+import type {ITokenizer} from 'js-search';
 
 var REGEX = /[\s.:]+/i;
 
