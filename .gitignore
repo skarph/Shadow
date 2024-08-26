@@ -38,6 +38,6 @@ yarn-error.log*
 next-env.d.ts
 
 #generated/dynamic content files
-/app/data/
+
 
 /_OLDWIKI

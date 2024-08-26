@@ -1,0 +1,744 @@
+# Hooking: Methods and Functions
+---
+
+## `Utils.hook` is a very powerful function that allows you to safely and dynamically replace any code.
+
+```lua
+Utils.hook(<table: table>, <index: string>, <hook: function>, >)
+
+```
+
+
+## What is OOP?
+see that one explination
+
+## A note on Classes, Lua, and Kristal
+In Lua, all Classes and Instances of Classes are tables, just like arrays.
+The only differene is how we use these tables we call Classes and Instances, and as such, they are built from simpler principles.
+This article will explore how Object-Oriented Programming is constructed, as well as how it behaves, in Kristal. 
+
+Pure Lua does not have a concept of a Class, nor is it Object-Oriented programming (OOP).
+However, using the tools Lua provides, many people have constructed Prototype-Based programming, a type of OOP.
+We will construct a simple Prototype-Based OOP for demonstration purpouses, and then using this knowledge, will explore the shorthands and convienences offered by Kristal for OOP.
+
+## Prototyping in Lua
+Consider the following table `horse_a`:
+```lua
+horse_a = {}
+horse_a["food"] = "apple"
+horse_a["sayFood"] = function(self)
+    print(self["food"])
+end
+```
+
+It has two values stored inside it: at `"food"` it is `"apple"`, and a `"sayFood"` that is a function.
+This function takes in one argument called `self`, indexes it at `"food"`, and prints what value was at that index.
+As expected, running the function providing itself, `horse_a`, as the arguments, prints "apple":
+
+```lua
+horse_a["sayFood"](horse_a)
+> apple
+```
+Now let us add a similarly structured table `horse_b`:
+
+```lua
+horse_a = {}
+horse_a["food"] = "apple"
+horse_a["sayFood"] = function(self)
+    print(self["food"])
+end
+
+horse_b = {}
+horse_b["food"] = "hay" --not too fond of fruits...
+horse_b["sayFood"] = function(self)
+    print(self["food"])
+end
+```
+While the value at `"food"` is different between `horse_a` and `horse_b`, they both have this index filled, as well as have functions at `"sayFood"` that preform the same action.
+Thus, we can use them interchangibly:
+```lua
+horse_a["sayFood"](horse_a)
+--> apple
+horse_b["sayFood"](horse_a)
+--> apple
+
+horse_a["sayFood"](horse_b)
+--> hay
+horse_b["sayFood"](horse_b)
+--> hay
+```
+If we remove this redundant function from one of `horse_a` or `horse_b`, and exclusively use the remaining function, we have made one of these tables the "protoype" of the other:
+```lua
+horse_a = {}
+horse_a["food"] = "apple"
+horse_a["sayFood"] = function(self)
+    print(self["food"])
+end
+
+horse_b = {}
+horse_b["food"] = "hay"
+
+horse_a["sayFood"](horse_a)
+--> apple
+horse_a["sayFood"](horse_b)
+--> hay
+```
+`horse_a` is said to be a prototype of `horse_b`. Note how `horse_a` is still capable of functioning on its own, while `horse_b` must depend on `horse_a`.
+If we make another similar table to `horse_b`, a `horse_c`, we could reuse the code from `horse_a` in a similar way.
+
+A protoype is a table that contains all the data nesecary for another table to behave as the prototype does.
+
+## Metatables and `__index`, and the Class-table, or How to build a morally questionable Horse Factory:
+
+To simplify this pattern, as well as make it easier to reproduce, Lua provides the concept of "metatables".
+A Metatable is a table in a special one-way relationship with another table established by calling `setmetatable(<table>, <metatable>)`.
+
+A Metatable with a value at `"__index"` will allow its associated table to index into the table at `"__index"` as if it were part of the table, if such a value is `nil` in the original table. The value at `"__index"` can contain any table, including the metatable itself:
+```lua
+horse_a = {}
+horse_a["__index"] = horse_a --metatables have "special" indexes that are treated differently from other indexes, "__index" is one of them.
+horse_a["food"] = "apple"
+horse_a["sayFood"] = function(self)
+    print(self["food"])
+end
+
+horse_b = {}
+horse_b["food"] = "hay"
+
+setmetatable(horse_b, horse_a) --set horse_b's metatable to be horse_a
+
+horse_b["sayFood"](horse_b) --lookup of "sayFood" fails on horse_b, so it looks in `horse_a`
+--> hay
+horse_b["food"] = nil
+horse_b["sayFood"](horse_b) --lookup of "food" now also fails on horse_b, so it looks in `horse_a` 
+--> apple
+```
+
+We can make a function at index `"new"` in `horse_a` to make new tables that are like it, and have `horse_a` as its metatable:
+```lua
+horse_a = {}
+horse_a["__index"] = horse_a
+horse_a["food"] = "apple"
+horse_a["sayFood"] = function(self)
+    print(self["food"])
+end
+
+horse_a["new"] = function(food)
+    local new_horse = {} --make a new table
+    setmetatable(new_horse, horse_a) --set its metatable to our horse_a prototype
+    new_horse["food"] = food
+    return horse
+end
+
+horse_b = horse_a.new("hay")
+
+horse_b["sayFood"](horse_b) --lookup of "sayFood" fails on horse_b, so it looks in `horse_a`
+--> hay
+horse_b["food"] = nil
+horse_b["sayFood"](horse_b) --lookup of "food" now also fails on horse_b, so it looks in `horse_a` 
+--> apple
+```
+The function at index `"new"` is called a Constructor.
+A Constructor is a function that returns an Instance of a Prototype or Class.
+An Instance is a table that behaves like its Prototype, or according to its Class.
+
+If we never intend to use `horse_a` on its own, we can remove some extraneous data, thus generalizing it into the `Horse` Class:
+```lua
+Horse = {}
+Horse["__index"] = Horse
+Horse["new"] = function(food)
+    local new_horse = {} --make a new table
+    setmetatable(new_horse, Horse) --set its metatable to our horse_a prototype
+    new_horse["food"] = food
+    return new_horse
+end
+Horse["sayFood"] = function(self)
+    print(self["food"])
+end
+
+horse_b = Horse.new("hay")
+```
+A Class, in Lua, is the metatable that describes the behavior of its Instances.
+
+## Polymorphism and Inheritance
+Let us make another Class, `Cow`:
+```lua
+--Cow Class
+Cow = {}
+Cow["__index"] = Cow
+Cow["new"] = function(food, moo)
+    local new_cow = {} --make a new table
+    setmetatable(new_cow, Cow) --set its metatable to our horse_a prototype
+    new_cow["food"] = food
+    new_cow["moo"] = moo
+    return new_cow
+end
+Cow["sayFood"] = function(self)
+    print(self["food"])
+end
+Cow["sayMoo"] = function(self)
+    print(self["moo"])
+end
+--Horse Class
+Horse = {}
+Horse["__index"] = Horse
+Horse["new"] = function(food)
+    local new_horse = {} --make a new table
+    setmetatable(new_horse, Horse) --set its metatable to our horse_a prototype
+    new_horse["food"] = food
+    return new_horse
+end
+Horse["sayFood"] = function(self)
+    print(self["food"])
+end
+```
+It shares most of its behavior with the `Horse` Class.
+We can make a Class `Animal` that contains both behaviors, and then make `Horse` and `Cow` inherit the behavior of this new Class, utilizing the lookup properties of Metatables and the `__index` Metamethod:
+
+```lua
+--Animal Class
+Animal = {}
+Animal["__index"] = Animal
+Animal["new"] = function(food)
+    local new_animal = {}
+    setmetatable(new_animal, animal)
+    new_animal["food"] = food
+    return new_horse
+end
+Animal["sayFood"] = function(self)
+    print(self["food"])
+end
+
+--Cow Class
+Cow = {}
+Cow["__index"] = Cow
+setmetatable(Cow, Animal)
+Cow["new"] = function(food)
+    local new_cow = Animal["new"](food)
+    new_cow["moo"] = moo
+    return new_cow
+end
+Cow["sayMoo"] = function(self)
+    print(self["moo"])
+end
+
+--Horse Class
+Horse = {}
+Horse["__index"] = Horse
+setmetatable(Horse, Animal)
+--All the behavior of Horse is in Animal!
+
+local cow_a = Cow.new("cud")
+local horse_a = Horse.new("apple")
+```
+We say Classes `Cow` and `Horse` "Extends", "Implements", or are "Child Class"es of `Animal`. 
+Likewise, `Animal` is the "Parent Class" or "Super Class" of both `Cow` and `Horse`
+
+Note: It is possible, yet unsupported, in Kristal, to have a Child Class have multiple Parent Classes, and is not recommended.
+
+Since all Constructors return a Instance of a Class, we can create a Class `Class` that describes every possible Child Class:
+# This one's the right one we'll base everything off of. i torsted it :\)
+```lua
+--Class Class
+Class = {}
+Class["__index"] = Class
+Class["new"] =  function()
+    local instance = {}
+    setmetatable(instance, Class)
+    return instance
+end
+---------------------------------
+--Animal Class
+Animal = {}
+Animal["__index"] = Animal
+setmetatable(Animal, Class)
+Animal["new"] = function(food)
+    local new_animal = Class["new"]()
+    setmetatable(new_animal, animal)
+    new_animal["food"] = food
+    return new_animal
+end
+Animal["sayFood"] = function(self)
+    print(self["food"])
+end
+
+--Cow Class
+Cow = {}
+Cow["__index"] = Cow
+setmetatable(Cow, Animal)
+Cow["new"] = function(food, moo)
+    local new_cow = Animal["new"](food)
+    setmetatable(new_cow, Cow)
+    new_cow["moo"] = moo
+    return new_cow
+end
+Cow["sayMoo"] = function(self)
+    print(self["moo"])
+end
+
+--Horse Class
+Horse = {}
+Horse["__index"] = Horse
+setmetatable(Horse, Animal)
+Horse["new"] = function(food)
+    local new_horse = Animal["new"](food)
+    setmetatable(new_horse, Horse)
+    return new_horse
+end
+--All the behavior of Horse is in Animal!
+
+local cow_a = Cow.new("cud", "mOoO")
+cow_a["sayMoo"](cow_a)
+--> mOoO
+local horse_a = Horse.new("apple")
+horse_a["sayFood"](horse_a)
+--> apple
+```
+## OOP Syntax in Kristal
+
+Up until now, we have been intentionally using syntax that is remniscent of traditional array structures.
+This has been done so we can understand that Classes and their Instances are tables we establish special rules and relations about.
+
+This syntax is not preferred, Kristal employs some syntatical and programatic tricks to make OOP more bearable.
+The following snippets are equivilent<sup>[3]</sup> to eachother:
+<table>
+
+<tr>
+</tr>
+<tr>
+<td>
+<h3 style={{textAlign: "center"}}>Kristal OOP</h3>
+<pre>
+```lua
+--Class Class
+-- For the sake of comparison,
+-- comments are included to
+-- space out this code.
+-- The Class Class already
+-- exists, and can be invoked
+-- by calling "Class" in Kristal.
+-- We do not need to rewrite it.
+---------------------------------
+--Animal Class
+Animal, super_Animal = Class() 
+-- Class() is actually a function
+-- that makes new classes
+
+function Animal:init(food)
+    super_Animal.init(self)
+    -- metatable set by ^
+    self.food = food
+    -- no return, self is mutated
+end
+
+function Animal:sayFood()
+    print(self.food)
+end
+
+--Cow Class
+Cow, super_Cow = Class(Animal)
+-- super_Cow is Animal and
+-- the Parent Class of Cow
+
+function Cow:init(food, moo)
+    super_Cow.init(self, food)
+    --
+    self.moo = moo
+    --
+end
+
+function Cow:sayMoo()
+    print(self.moo)
+end
+
+--Horse Class
+Horse, super_Horse = Class(Animal)
+--
+--
+
+function Horse:init(food)
+    super_Horse.init(self, food)
+    --
+    --
+end
+
+--demonstration 
+local cow_a = Cow("cud", "mOoO")
+cow_a:sayMoo()
+--> mOoO
+local horse_a = Horse("apple")
+horse_a:sayFood()
+--> apple
+```
+</pre>
+</td>
+
+<td>
+<h3 style={{textAlign: "center"}}>Table OOP</h3>
+```lua
+--Class Class
+Class = {}
+Class["__index"] = Class
+Class["new"] =  function()
+    local instance = {}
+    setmetatable(instance, Class)
+    return instance
+end
+---------------------------------
+--Animal Class
+Animal = {}
+Animal["__index"] = Animal
+setmetatable(Animal, Class)
+
+Animal["new"] = function(food)
+    local new_animal = Class["new"]()
+    setmetatable(new_animal, animal)
+    new_animal["food"] = food
+    return new_animal
+end
+
+Animal["sayFood"] = function(self)
+    print(self["food"])
+end
+
+--Cow Class
+Cow = {}
+Cow["__index"] = Cow
+setmetatable(Cow, Animal)
+
+Cow["new"] = function(food, moo)
+    local new_cow = Animal["new"](food)
+    setmetatable(new_cow, Cow)
+    new_cow["moo"] = moo
+    return new_cow
+end
+
+Cow["sayMoo"] = function(self)
+    print(self["moo"])
+end
+
+--Horse Class
+Horse = {}
+Horse["__index"] = Horse
+setmetatable(Horse, Animal)
+
+Horse["new"] = function(food)
+    local new_horse = Animal["new"](food)
+    setmetatable(new_horse, Horse)
+    return new_horse
+end
+
+--demonstration
+local cow_a = Cow.new("cud", "mOoO")
+cow_a["sayMoo"](cow_a)
+--> mOoO
+local horse_a = Horse.new("apple")
+horse_a["sayFood"](horse_a)
+--> apple
+```
+</td>
+</tr>
+</table>
+
+The left-hand syntax is more compact, reasonable, and readable,
+and is typically used when writing mods for Kristal.
+## Globals, The Registry, and Writing Class files
+There are many Classes in Kristal that are exposed as global variables,
+such as
+<a href="/wiki/api/Sprite">`Sprite`</a>,
+<a href="/wiki/api/Actor">`Actor`</a>,
+and <a href="/wiki/api/Explosion">`Explosion`</a>.
+As shown, you can make instances of these Classes simply
+by calling the constructor in your code:
+```lua
+ sprite = Sprite("kristal")
+```
+We can now begin writing a new .lua file that we will put into our mod.
+For more info on the file structure of mods, see <a href="/wiki/creating-a-mod">Mod File Structure</a>.
+
+<br/>
+### <p style = {{textAlign : "center"}}> Congradulations! </p>
+<p style = {{textAlign : "center"}}> You now know everything you need to know about Object-Oriented Programming for Kristal </p>
+
+skarph — Yesterday at 8:57 PM
+
+no, however you can copy and paste the old code and change what lines you want in the hook, or you can use the original function orig that gets passed into your hook by invoking orig(...)
+~~
+hooking just replaces a refrence to one function with another function
+
+Snosibsnob — Yesterday at 8:59 PM
+
+Oh shit it replaces the function entirely? That’s perfect
+
+I was thinking it just inserted a new function
+
+skarph — Yesterday at 9:01 PM
+
+there's a bit of stuff going under the hood that kristal manages, but that's the gist
+
+Snosibsnob — Yesterday at 9:03 PM
+
+Wait is hooking handled differently by Kristal to Lua normally?
+
+Or are the arguements the same
+
+skarph — Yesterday at 9:04 PM
+
+Utils.hook does not call debug.sethook, they're two different implementations. Utils.hook is preferred since it's properly integrated into the gamestate manager (your hooks dissapear when you leave your mod)
+
+Snosibsnob — Yesterday at 9:05 PM
+
+Got it
+
+So what are the arguements Utils.hook uses 
+
+skarph — Yesterday at 9:07 PM
+
+Utils.hook(\<Table>, \<index>, \<hook_function>)
+
+the hook function is garunteed* atleast one argument, orig, that is passed in as its first argument when \<Table>[\<index>}(...) is called.
+
+so the following hooks into World:heal and makes it print a message to console, before continuing with the original World:heal
+
+Utils.hook(World, "heal", function(orig, self, target, amount, text)
+
+  print("hooked!")
+
+  orig(self,target,amount,text)
+
+end)
+
+ 
+
+skarph — Yesterday at 9:14 PM
+
+Image
+
+Snosibsnob — Yesterday at 9:16 PM
+
+If the same table and index are called in multiple places is there any way to specify a specific instance
+
+Bor (Missing Woods, DeltaWoods) — Yesterday at 9:17 PM
+
+shouldnt orig() be put as the first line so if you override an existing thing, it doesnt get replaced by the default thing in the original code? or does it not matter
+
+skarph — Yesterday at 9:18 PM
+
+noooo but because you're thinking of tables wrong. you can hook into an instance of a class (wouldnt recommend it), and you can hook into a function of a whole class. both are individual tables as lua isnt object-oriented
+
+Object is a table, and the result of Object() is also a table
+
+skarph — Yesterday at 9:19 PM
+
+it depends what you're trying to accomplish
+
+in general yeah though
+
+Snosibsnob — Yesterday at 9:20 PM
+
+What would be the trouble with hooking into an instance?
+
+skarph — Yesterday at 9:20 PM
+
+you're violating OOP
+
+Snosibsnob — Yesterday at 9:20 PM
+
+Oh I see
+
+It fucks with hierarchy or smth
+
+skarph — Yesterday at 9:21 PM
+
+are you familiar with how OOP works with lua?
+
+Snosibsnob — Yesterday at 9:21 PM
+
+Somewhat? Admittedly thus far I’ve just been treating Lua as I would C#
+
+skarph — Yesterday at 9:21 PM
+
+its extremely stupid and i remember having trouble with it
+
+ah no it's a completely different beast
+
+imagine everything is a hashmap
+
+every thing that isnt a number, string, function, boolean, or nil
+
+all tables are just glorified hashmaps
+
+Snosibsnob — Yesterday at 9:22 PM
+
+Oh, huh
+
+Guess that makes sense given that Lua is so friendly towards strings
+
+skarph — Yesterday at 9:24 PM
+
+basically, an "instance" i  of a "class" C is just a table i that has a pointer to C. if you index into i and it cant find what your looking for, i will index into C to find what you want
+
+read these for more info
+
+https://www.lua.org/pil/13.html
+
+https://www.lua.org/pil/13.4.1.html
+
+https://www.lua.org/pil/16.html#ObjectSec
+
+actually i should probably. put this all on the wiki
+
+Image
+
+oops
+
+Snosibsnob — Yesterday at 9:27 PM
+
+I think I see the problem here yeah
+
+
+
+Hooking into an instance skips the hash function
+
+skarph — Yesterday at 9:27 PM
+
+yeaaah it's not so much the hash function as it is the lookup but yeah thats right
+
+:ralseiyeah:
+
+Snosibsnob — Yesterday at 9:28 PM
+
+But you can still technically do it becuase both the instance and class are tables
+
+skarph — Yesterday at 9:28 PM
+
+yep! there's nothing stopping you
+
+since they're both the same kind of data structure 
+
+since it's a very barebones systsem, there's a few libraries + some bespoke ones kristal uses for handeling classes
+
+Snosibsnob — Yesterday at 9:29 PM
+
+Given what I’ve read when looking at magic glass’ code I don’t think it should be that big of an issue to hook into the class
+
+skarph — Yesterday at 9:29 PM
+
+kristal mainly uses hump's implementation of classes https://hump.readthedocs.io/en/latest/class.html
+
+as well as having some of it's own convention and convieneces that differ from hump
+
+Snosibsnob — Yesterday at 9:30 PM
+
+Thanks for all the info!
+
+skarph — Yesterday at 9:31 PM
+
+🫠 again i should probably put this on the wiki, lemme try to write up this convo because it actually got a lot of things i wanted to say out
+
+(still gotta do more research lol)
+
+(also to anyone who's reading this please correct me. i know i fucked up somewhere)
+
+```lua
+--the "Class" Class is built into Kristal. We dont need to write it ourselves. 
+
+--Animal Class
+Animal, super_Animal = Class() --make a new Class, as well as get its Parent Class (defaults to the "Class" Class)
+--this is the declaration of the Constructor. Creating a new Instance will eventually call this function.
+function Animal:init(food) --another way of writing Animal["init"] = function(self, food)
+    --note the implied argument self that gets passed in first. this is our Instance, and it is already set up
+    super_Animal.init(self) --this call the Parent Class (in this case, "Class") Constructor and modifies self
+    self.food = food
+    --there is no return statement. the self implicitly passed in is handeled by Kristal (such as giving it to other Constructors) and returned later
+end
+
+function Animal:sayFood()
+    print(self.food)
+    end
+end
+
+--Cow Class
+Cow, super_Cow = Class(Animal) --Class(Parent_Class) takes in an argument that is the Parent Class for this new Class, and returns it as the second value
+--this is called a "super"
+
+function Cow:init(food, moo)
+    super_Cow.init(self, food) --super_Cow is Animal
+    self.moo = moo
+end
+
+function Cow:sayMoo()
+    print(self.moo)
+end
+
+--Horse Class
+Horse, super_Horse = Class(Animal)
+function Horse:init(food)
+    super_Horse.init(self, food)
+end
+
+--demonstration
+local cow_a = Cow("cud", "mOoO") --we can "call" the table directly because kristal internally sets the `__call` metamethod on tables returned from Class()
+cow_a:sayMoo()
+--> mOoO
+local horse_a = Horse("apple")
+horse_a:sayFood()
+--> apple
+```
+
+```lua
+--Class Class
+Class = {}
+Class["__index"] = Class
+Class["new"] =  function()
+    local instance = {}
+    setmetatable(instance, Class)
+    return instance
+end
+---------------------------------
+--Animal Class
+Animal = {}
+Animal["__index"] = Animal
+setmetatable(Animal, Class)
+Animal["new"] = function(food)
+    local new_animal = Class["new"]()
+    setmetatable(new_animal, animal)
+    new_animal["food"] = food
+    return new_animal
+end
+Animal["sayFood"] = function(self)
+    print(self["food"])
+end
+
+--Cow Class
+Cow = {}
+Cow["__index"] = Cow
+setmetatable(Cow, Animal)
+Cow["new"] = function(food, moo)
+    local new_cow = Animal["new"](food)
+    setmetatable(new_cow, Cow)
+    new_cow["moo"] = moo
+    return new_cow
+end
+Cow["sayMoo"] = function(self)
+    print(self["moo"])
+end
+
+--Horse Class
+Horse = {}
+Horse["__index"] = Horse
+setmetatable(Horse, Animal)
+Horse["new"] = function(food)
+    local new_horse = Animal["new"](food)
+    setmetatable(new_horse, Horse)
+    return new_horse
+end
+--All the behavior of Horse is in Animal!
+
+local cow_a = Cow.new("cud", "mOoO")
+cow_a["sayMoo"](cow_a)
+--> mOoO
+local horse_a = Horse.new("apple")
+horse_a["sayFood"](horse_a)
+--> apple
+```
