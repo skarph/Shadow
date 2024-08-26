@@ -37,6 +37,7 @@
     }
 }
 
+/*
 .sidebar a {
     color: rgba(0, 200, 200, 1);
 }
@@ -44,8 +45,38 @@
 .sidebar a:hover {
     color: rgba(0, 255, 255, 1);
 }
-
+*/
 .sidebar p {
     color: lightgray;
     font-size: 16px;
 }
+
+.anchor {
+    margin-bottom: 8px;
+    font-family: "8bitOperatorPlus-Bold", monospace;
+}
+
+/*
+.anchor a {
+    color: white;
+}
+
+.anchor a:hover {
+    color: yellow;
+}
+.anchor h1 {
+    margin-left: 0em;
+}
+
+.anchor h2 {
+    margin-left: 1em;
+}
+
+.anchor h3 {
+    margin-left: 2.4em;
+}
+
+.anchor h4 {
+    margin-left: 3em;
+}
+*/

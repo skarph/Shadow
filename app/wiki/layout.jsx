@@ -6,10 +6,12 @@ export const metadata = {
   description: 'Documentation for the powerful DELTARUNE fangame engine, Kristal.'
 }
 
-export default function RootLayout({children}) {
+export default function RootLayout({children, sidebar}) {
   return (
     <div className={styles.container}>
-      <Sidebar />
+      <Sidebar>
+        {sidebar}
+      </Sidebar>
       <main className={styles.main}>
           {children}
       </main>

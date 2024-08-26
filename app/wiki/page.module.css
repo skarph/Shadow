@@ -2,5 +2,26 @@
     text-align: center;
     margin: auto;
     display: block;
-    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+}
+
+.article *{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.article p{
+    margin-left: 1em;
+    font-style: italic;
+}
+
+
+ul.container {
+    columns: 3;
+    list-style: none;
+    gap: 20px;
+}
+
+.container li {
+    margin-left: 0;
+    break-inside: avoid-column;
 }

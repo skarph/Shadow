@@ -1,6 +1,8 @@
 import path from 'path';
 import fs from 'fs';
-import {TYPES} from '../src/docparser.mjs';
+import {kristal_api} from '../src/docparser.mjs';
+import getArticleMetadata from '../src/getArticleMeta.mjs';
+
 import sanitizeHtml from 'sanitize-html';
 
 import {remark} from 'remark';
@@ -11,52 +13,26 @@ import lunr from 'lunr';
 const FILE_NAME = "wiki-index.json"
 
 const BOOST = Object.freeze({
-    ARTICLE: 3,
-    API_TYPE: 2,
+    ARTICLE: 10,
+    API_TYPE: 5,
     API_FIELD: 1,
 
-    TITLE: 4,
-    DESCRIPTION: 2,
-    CONTENT: 1,
+    TITLE: 10,
+    TAGS: 2,
+    DESCRIPTION: 1,
+    //CONTENT: 1,
 });
 
 console.log("[wiki-index] Generating search index...");
 
-const dirRelativeToPublicFolder = './wiki/'
+const dirRelativeToPublicFolder = './data/articles'
 const dir = path.resolve('./app/', dirRelativeToPublicFolder);
 const paths = fs.readdirSync(dir, {recursive: true})
-    .filter( (rpath) => 
-            //only text content; handle API pages seperately
-            rpath.includes("page") &&
-            !rpath.includes(".module") &&
-            !rpath.includes("api") &&
-            !rpath.match(/^page\..../)); 
-    //.map( (rpath) => dir + path.sep + rpath )
 
 const articles = paths.map(rpath => {
-    var name = rpath.substring(0,rpath.indexOf("\\"));
+    const slug = rpath.substring(0,rpath.indexOf("."));
+    const metadata = getArticleMetadata(slug)
     var body = fs.readFileSync(dir + path.sep + rpath).toString()
-    
-    var metadata = body.match(/(?<=export\sconst\smetadata\s=\s){[\s\S]+?}/g)?.[0];
-    body = body.replace(metadata,"");
-    if(metadata){
-        //sanitize JSON
-        metadata.match(/(?<=\s)\w+(?=:)/g).forEach( (k) => {metadata = metadata.replace(k, "'"+k+"'")});
-        metadata = metadata.replace(/('(?=(,\s*')))|('(?=:))|((?<=([{:,]\s*))')|((?<={)')|('(?=}))/g, '"');
-        let i = metadata.lastIndexOf("'");
-        metadata = metadata.substring(0,i) + '"' + metadata.substring(i+1);   //regex replace fails?
-        metadata = metadata.replace(/,[\s]*}/g, "}");
-        metadata = metadata.replace(/\\./g, (m) => {
-            switch (m){
-                case "\\\"": return "\"";
-                case "\\\'": return "\'"
-                case "\\n" :  return "\n";
-                case "\\t" : return "\t";
-            }
-        });
-        metadata = JSON.parse(metadata);
-    }
-
     remark()
     .use(mdx)
     .use(strip)
@@ -73,14 +49,14 @@ const articles = paths.map(rpath => {
         function(err, file) {
             body = sanitizeHtml(String(file.value), {allowedTags: []});
             if (err){
-                console.warn("Couldn't parse "+name+", is it .mdx?");
+                console.warn("Couldn't parse "+slug+", is it .mdx?");
                 //throw err;
             }     
     });
     
     return {
         id: JSON.stringify({
-            route: "/wiki/" + rpath.split(path.sep).join(path.posix.sep).replace(/\/page\..*/,""),
+            route: "/wiki/" + slug,
             title: metadata.title ?? "[NO TITLE]",
             description: metadata.description ?? "[NO DESCRIPTION]"
         }),
@@ -88,6 +64,7 @@ const articles = paths.map(rpath => {
         title: metadata.title ?? "[NO TITLE]",
         description: metadata.description ?? "[NO DESCRIPTION]",
         content: body,
+        tags: (metadata.tags ?? []).join(" "),
         boost: BOOST.ARTICLE
     }
 });
@@ -95,36 +72,39 @@ const articles = paths.map(rpath => {
 
 const apiType = [];
 const apiField = [];
-TYPES.forEach( (type) => {
-    let text = "";
-    if(type.fields) {
-        type.fields.forEach( (field) => {
+kristal_api.forEach( (doc) => {
+    //let text = "";
+    if(doc.fields) {
+        doc.fields.forEach( (field) => {
             let desc =  (field.desc ?? field.rawdesc) ?? "";
+            const delim = field.extends.args?.[0]?.name=="self" ? ":" : "."
             apiField.push({
                 id: JSON.stringify({
-                    route: "/wiki/api/" + type.name + "#" + field.name,
-                    title: type.name + "." + field.name,
-                    description: "(API: " + field.type.replace("set", "").replace("doc.", "") + ")" + ((field.desc ?? field.rawdesc) ?? "")
+                    route: "/wiki/api/" + doc.name + "#" + field.name,
+                    title: doc.name + delim + field.name,
+                    description: "(API: " + field.type.replace("set", "").replace("doc.", "") + ")" + desc
                 }),
 
-                title: type.name + "." + field.name,
-                description: "(API: " + field.type.replace("set", "").replace("doc.", "") + ")" + ((field.desc ?? field.rawdesc) ?? ""),
-                content: type.name + "." + field.name,
+                title: field.name,
+                description: "(API: " + field.type.replace("set", "").replace("doc.", "") + ")" + desc,
+                //content: doc.name + "." + field.name,
+                tags: (["_class_"+doc.name, "API"]).join(" "),
                 boost: BOOST.API_FIELD
             });
-            text = text + " | " + field.name + " " + desc
+            //text = text + " | " + field.name + " " + desc
         });
     }
     apiType.push({
         id: JSON.stringify({
-            route: "/wiki/api/" + type.name,
-            title: type.name,
-            description: "(API: " + type.type.replace("set", "") + ")" + ((type.desc ?? type.rawdesc) ?? "")
+            route: "/wiki/api/" + doc.name,
+            title: doc.name,
+            description: "(API: " + doc.type.replace("set", "") + ")" + ((doc.desc ?? doc.rawdesc) ?? "")
         }),
 
-        title: type.name,
-        description: "(API: " + type.type.replace("set", "") + ")" + ((type.desc ?? type.rawdesc) ?? ""),
-        content: text,
+        title: doc.name,
+        description: "(API: " + doc.type.replace("set", "") + ")" + ((doc.desc ?? doc.rawdesc) ?? ""),
+        //content: text,
+        tags: (["API"]).join(" "),
         boost: BOOST.API_TYPE
     })
 })
@@ -135,12 +115,17 @@ var index = lunr(function() {
     this.ref("id");
     this.field("title", {boost: BOOST.TITLE});
     this.field("description", {boost: BOOST.DESCRIPTION});
-    this.field("content", {boost: BOOST.CONTENT});
+    this.field("tags", {boost: BOOST.TAGS});
+    //this.field("content", {boost: BOOST.CONTENT});
+
+    this.k1(1.2)
+    this.b(0.0)
 
     corpus.forEach(function (doc) {
-        this.add(doc, doc.boost);
+        this.add(doc, {boost: doc.boost});
     }, this);
 })
+index.pipeline.remove(index.stemmer)
 
 console.log(`[wiki-index] Generated index for ${corpus.length} documents.`);
 

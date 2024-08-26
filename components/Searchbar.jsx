@@ -7,14 +7,14 @@ export default function Searchbar(props) {
     const submit = props.submit || "Submit"
 
     return (
-    <form action="/" method="get" className={styles}>
+    <form action="/" method="get">
         <label htmlFor="header-search">
             <span className={styles.visuallyhidden}>{placeholder}</span> 
         </label>
         <input
-            type="text"
             id="header-search"
-            placeholder={placeholder}
+            placeholder={placeholder}    
+            type="text"
             name="search"
         />
         <button 

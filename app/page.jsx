@@ -2,6 +2,9 @@ import styles from './page.module.css'
 import Box from "components/Box"
 import NewTab from "components/NewTab"
 import Link from "next/link"
+import Image from 'next/image'
+
+import title_logo_shadow from 'public/title_logo_shadow.png'
 
 export default function Home() {
 
@@ -59,7 +62,7 @@ export default function Home() {
 
     return (
         <>
-            <img src="title_logo_shadow.png" alt="title logo" className={styles.logo}/>
+            <Image src={title_logo_shadow} alt="title logo" className={styles.logo}/>
             <section className={styles.section}>
                 <Box>
                     <h2 className={styles.header}>What is this?</h2>
@@ -82,8 +85,8 @@ export default function Home() {
                     <div className={styles.screenshots}>
                     {
                         mods.map((mod, index) => {
-                            const img = <img className={styles.screenshot} src={mod.image}/>;
-                            const info = <div className={styles.screenshot_info}>
+                            const img = <Image className={styles.screenshot} src={mod.image} alt={mod.title} width={640} height={480} unoptimized = {true}/>;
+                        const info = <div className={styles.screenshot_info}>
                                 <NewTab href={mod.page} className={styles.screenshot_title}>{mod.title}</NewTab>
                                 <span className={styles.screenshot_author}>By <NewTab href={mod.author_link}>{mod.author}</NewTab></span>
                                 <p className={styles.screenshot_description}>{mod.description}</p>

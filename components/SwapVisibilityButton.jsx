@@ -1,24 +1,37 @@
 "use client" 
 import styles from './SwapVisibilityButton.module.css';
-export default function SwapVisibilityButton({ children, className, componentA, componentB, ...props}, ) {
+import { useState, useEffect } from "react";
+
+function updateDisplay(displayB, elementA, elementB) {
+    let a = document.getElementById(elementA)
+    let b = document.getElementById(elementB)
+    a.style.display = displayB ? "block" : "none"
+    b.style.display = !displayB ? "block" : "none"
+}
+
+export default function SwapVisibilityButton({ children, className, elementA, elementB, ...props}, ) {
+    const [displayB, setDisplayB] = useState('')
     
-    return <label className={`${styles.switch} ${className}`} {...props} >
-        <input type="checkbox" onClick={
-        (e) => {
-            let a = document.getElementById(componentA)
-            let b = document.getElementById(componentB)
-            a.style.display = a.style.display == "none" ? "block" : "none"
-            b.style.display = b.style.display == "none" ? "block" : "none"
+    //on client side hydration
+    useEffect( () => {
+        setDisplayB(
+            window.localStorage.getItem("stateSwapVisibilityButton") === "true"
+        )
+    }, [])
+
+    //onChange clientside
+    useEffect( () => {
+        if( typeof(displayB) === "boolean" ) {
+            updateDisplay(displayB, elementA, elementB)
+            window.localStorage.setItem("stateSwapVisibilityButton", displayB)
         }
-    } />
+    }, [displayB])
+
+    return <label className={`${styles.switch} ${className}`} {...props} >
+        <input type = "checkbox" checked = {displayB} onChange = {(e) => {
+            setDisplayB(e.target.checked)
+        }}/>
+
         <span className={`${styles.slider}`} ></span>
     </label>;
 }
-/*
-<div class={styles.toggle} onClick={(e) => setDisplayed(!displayed)}>click to toggle</div>
-
-.toggle {
-    cursor: pointer;
-    user-select: none;
-}
-*/

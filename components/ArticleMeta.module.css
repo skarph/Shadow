@@ -1,0 +1,99 @@
+.header * {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.description {
+    margin-left: 40px;
+    font-style: italic;
+}
+
+.top{
+    font-size: 15px;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    color: lightgray;
+}
+
+.authors * {
+    display: inline;
+}
+
+.authors li {
+    list-style-type: none;
+    margin: 0;
+    display: inline;
+}
+
+.authors li::after{
+    content: ", ";
+}
+.authors li:last-of-type:after {
+    content: "";
+}
+
+.top span{
+    display: table-cell;
+    text-align: center;
+}
+
+.top span:first-child{
+    text-align: left;
+    cursor: help;
+}
+
+.top span:last-child{
+    text-align: right;
+    cursor: help;
+}
+
+.header hr {
+    margin-top: 10px;
+}
+
+
+.stable::before {
+    display: block;
+    width: 15px;
+    height: 15px; 
+    float: left;
+    /*ughhhhh*/
+    margin-top: 3px;
+    margin-right: 0.25em;
+
+    background: url('/icon/kristal.png') no-repeat center bottom;
+    background-size: contain;
+
+    content: '';
+}
+
+.beta::before {
+    display: block;
+    width: 15px;
+    height: 15px; 
+    float: left;
+    /*ughhhhh*/
+    margin-top: 3px;
+    margin-right: 0.25em;
+
+    background: url('/icon/kristal_orange.png') no-repeat center bottom;
+    background-size: contain;
+
+    content: '';
+}
+
+.old::before {
+    display: block;
+    width: 15px;
+    height: 15px; 
+    float: left;
+    /*ughhhhh*/
+    margin-top: 3px;
+    margin-right: 0.25em;
+
+    background: url('/icon/kristal_gray.png') no-repeat center bottom;
+    background-size: contain;
+
+    content: '';
+}

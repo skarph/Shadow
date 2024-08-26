@@ -3,6 +3,46 @@ import styles from './page.module.css'
 import Link from 'next/link'
 import {searchQuery} from 'src/wikisearch.js'
 import SearchResultsPaginate from 'components/SearchResultsPaginate'
+import Image from 'next/image'
+import prettyTag from 'src/prettyTag.mjs'
+
+import meta_list from 'app/data/meta-list.json'
+import title_logo_shadow from 'public/title_logo_shadow.png'
+
+function TableArticleLinks({columns}) {
+    const tag_article = [] // [ {tag: string, articles=[]}, ... ]
+
+    meta_list.forEach( (metadata) => {
+        let tag = metadata.tags[0]
+        let pair = tag_article.find( (p) => p.tag === tag )
+        if(!pair){
+            pair = {tag, articles: []}
+            tag_article.push(pair)
+        }
+        pair.articles.push(
+            metadata
+        )
+    })
+
+    tag_article.sort( (a,b) => a.tag > b.tag ? 1 : -1)
+    tag_article.forEach( (pair) => pair.articles.sort( (a,b) => a.title > b.title ? 1 : -1 ) )
+    
+    return <ul className = {styles.container}>
+        {tag_article.map( (pair) =>
+        <li key = {pair.tag} className = {styles.col}>
+            <h2>{prettyTag(pair.tag)}</h2>
+            <hr/>
+            {pair.articles.map( metadata => 
+                <div key = {metadata.slug} className = {styles.article}>
+                    <Link href = {`/wiki/${metadata.slug}`}><h3>{metadata.title}</h3></Link>
+                    <p>{metadata.description}</p>
+                </div>
+            )}
+
+        </li>
+        )}
+    </ul>
+}
 
 export default function Page({
     params,
@@ -10,7 +50,7 @@ export default function Page({
 }) {
 
     return(<>
-    <img src="title_logo_shadow.png" alt="title logo" className={styles.logo}/>
+    <Image src={title_logo_shadow} alt="title logo" className={styles.logo} />
     
     {
         searchParams.search ?
@@ -23,7 +63,11 @@ export default function Page({
     <Box>
         Kristal is an *awesome* DELTARUNE fangame engine, written in Lua, using LÖVE.
     </Box>
-
+    <Box>
+        <h2>Featured Articles</h2>
+        <br/>
+        <TableArticleLinks columns = {3}/>
+    </Box>
     <Box>
         <h2> Getting Started </h2>
         <hr/>
