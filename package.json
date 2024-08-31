@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run wiki-make && wiki-index && next build",
+    "build": "npm run wiki-make && npm run wiki-index && next build",
     "build-no-wiki-index": "next build",
     "start": "next start",
     "lint": "next lint",
