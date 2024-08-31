@@ -20,7 +20,7 @@ popd
 chmod +x tmp/lua-language-server/21-07-24-ubuntu-binary/lua-language-server
 tmp/lua-language-server/21-07-24-ubuntu-binary/lua-language-server --doc=tmp/kristal --doc_out_path=app/data
 
-#rm -rf tmp
+rm -rf tmp
 
 #get ninja binaries manually (cant use a package manager)
 #curl -sL $(curl -s https://api.github.com/repos/ninja-build/ninja/releases/latest | grep -o "http.*ninja-linux.zip") --output ninja.zip
