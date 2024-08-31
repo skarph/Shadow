@@ -56,7 +56,6 @@ const GITHUB_SOURCE = 'https://github.com/KristalTeam/Kristal/blob/main'
 function getGithubLink(type) {
     var start = type.defines[0].extends.start?.[0] || type.defines[0].extends[0].start[0]
     var finish = type.defines[0].extends.finish?.[0] || type.defines[0].extends[0].finish[0]
-    console.log("TEST", type.defines[0].extends)
     return GITHUB_SOURCE + type.defines[0].file + '#' +
         ('L' + (start + 1)) +
         ('L' + (finish + 1))
@@ -310,7 +309,6 @@ export default function Page({ params }) {
     //---[fields]
     //-?Undocumented
     //---[undocumented]
-    console.log(sanitizeHtml(doc.description))
     return <Docbox className = {styles.wikiNoShadow}>
         <h1 id = {doc.name}>
             <a href = {"#"+doc.name}> {doc.name} </a> 
