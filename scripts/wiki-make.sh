@@ -17,7 +17,7 @@ git pull
 cd -
 
 popd
-chmod -x tmp/lua-language-server/21-07-24-ubuntu-binary/lua-language-server
+sudo chmod -x tmp/lua-language-server/21-07-24-ubuntu-binary/lua-language-server
 tmp/lua-language-server/21-07-24-ubuntu-binary/lua-language-server --doc=tmp/kristal --doc_out_path=app/data
 
 #rm -rf tmp
