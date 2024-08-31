@@ -10,6 +10,8 @@ import { Fragment } from 'react';
 
 import Link from 'next/link';
 
+import sanitizeHtml from 'sanitize-html';
+
 export function generateStaticParams() {
     return kristal_api.map( (doc) => ({doc: doc.name}) )
 }
@@ -48,6 +50,22 @@ function tryGetLoveWiki(str){
     if(loveRef) {
         return "https://love2d.org/wiki/" + loveRef
     }
+}
+
+const GITHUB_SOURCE = 'https://github.com/KristalTeam/Kristal/blob/main'
+function getGithubLink(type) {
+    var start = type.defines[0].extends.start?.[0] || type.defines[0].extends[0].start[0]
+    var finish = type.defines[0].extends.finish?.[0] || type.defines[0].extends[0].finish[0]
+    console.log("TEST", type.defines[0].extends)
+    return GITHUB_SOURCE + type.defines[0].file + '#' +
+        ('L' + (start + 1)) +
+        ('L' + (finish + 1))
+}
+// https://github.com/KristalTeam/Kristal/blob/main/src/lib/https.lua#L7-L14
+function getGithubFieldSection(field) {
+    return GITHUB_SOURCE + field.file + '#' +
+        ('L' + (field.extends.start[0] + 1)) +
+        ('L' + (field.extends.finish[0] + 1))
 }
 
 //parses text for documentation keywords and assigns appropriate refrence links / hover info
@@ -95,6 +113,8 @@ const OptionalConstructor = ({doc}) => doc.constructor ? <>
                 )}
                 <span className = {styles.syntax}>)</span>
             </h3>
+            
+            <Link href={getGithubFieldSection(doc.constructor)}>See Github</Link>
 
             <DescriptionMarkdown className = {styles.docDescription} 
                 markdown = {doc.constructor.rawdesc || doc.constructor.desc}
@@ -157,6 +177,8 @@ const OptionalMethods = ({doc}) => doc.method.length > 0 ? <>
                 <span className = {styles.syntax}>)</span>
             </h3>
 
+            <Link href={getGithubFieldSection(method)}>See Github</Link>
+            
             <DescriptionMarkdown className = {styles.docDescription} 
                 markdown = {method.rawdesc || method.desc}
             />
@@ -233,6 +255,9 @@ const OptionalFields = ({doc, field_list, class_style, label}) => field_list.len
                 <span className = {styles.docDescription}>: </span>
                 {parseTypes(field.extends.view)}
             </h3>
+            
+            <Link href={getGithubFieldSection(field)}>See Github</Link>
+
             <div className = {styles.docDescription}>
                 <DescriptionMarkdown className = {styles.docDescription} 
                     markdown = {field.rawdesc || field.desc}
@@ -243,6 +268,33 @@ const OptionalFields = ({doc, field_list, class_style, label}) => field_list.len
     </details>
     <hr/>
 </> : null
+
+const OptionalValue = ({docDefine}) => {
+    if (!docDefine)
+        return null
+    if (typeof(docDefine.value) != 'object') 
+        return <div>
+            <p>Default: </p><span>{docDefine.value}</span>
+        </div>
+    return <table>
+        <thead key = "table_header">
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        { docDefine.value.map( (value, index) =>
+        <tbody key = {index}>
+            <tr>
+                <td>{value.key}</td>
+                <td>{value.value}</td>
+                <td>{value.desc || ""}</td>
+            </tr>
+        </tbody>
+        )}
+    </table>
+}
 
 export default function Page({ params }) {
     const slug = decodeURIComponent(params.doc)
@@ -258,6 +310,7 @@ export default function Page({ params }) {
     //---[fields]
     //-?Undocumented
     //---[undocumented]
+    console.log(sanitizeHtml(doc.description))
     return <Docbox className = {styles.wikiNoShadow}>
         <h1 id = {doc.name}>
             <a href = {"#"+doc.name}> {doc.name} </a> 
@@ -270,13 +323,14 @@ export default function Page({ params }) {
             </span>
         )}
         </h4>
-        <p>{doc.description}</p>
-
+        <Link href={getGithubLink(doc)}>See Github</Link>
+        <Markdown markdown = {doc.description}></Markdown>
         <br/>
         <OptionalConstructor doc = {doc}/>
         <OptionalMethods doc = {doc}/>
         <OptionalFields doc = {doc} field_list = {doc.field} class_style = {styles.syntaxField} label = "Fields"/>
         <OptionalFields doc = {doc} field_list = {doc.undocumented} class_style = {styles.syntaxUndocumented} label = "Undocumented"/>
+        <OptionalValue docDefine = {doc.defines[0]}/>
     </Docbox>
 }
  

@@ -38,7 +38,7 @@ kristal_api.forEach( (doc) => {
     doc.undocumented = []
 
     doc.hierarchy = null
-    doc.description = doc.desc || doc.rawdesc
+    doc.description = doc.desc || doc.rawdesc || doc.defines[0].desc
     doc.isClass = doc.defines[0].type === "doc.class"
 
     doc.fields?.forEach( (field) => { switch (field.extends.type) {
