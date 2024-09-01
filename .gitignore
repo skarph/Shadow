@@ -40,4 +40,8 @@ next-env.d.ts
 #generated/dynamic content files
 
 
-/_OLDWIKI
+_OLDWIKI
+app/data/doc.json
+app/data/old_doc.json
+app/data/wiki-index.json
+nodesource_setup.sh
