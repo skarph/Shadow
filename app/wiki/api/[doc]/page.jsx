@@ -170,7 +170,7 @@ const OptionalMethods = ({doc}) => doc.method.length > 0 ? <>
                     <span className = {styles.syntaxSymbol}>{arg.name}</span>
                     <span>: </span>
                     {parseTypes(arg.view)}
-                    {i < method.extends.args.length-1 ? <span>, </span> : null}
+                    {arg_i < method.extends.args.length-1 ? <span>, </span> : null}
                 </span>
                 )}
                 <span className = {styles.syntax}>)</span>
