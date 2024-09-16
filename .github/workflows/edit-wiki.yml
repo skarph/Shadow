@@ -1,0 +1,44 @@
+﻿name: Edit Wiki
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Contributing Author's name
+        type: string
+        default: 'Anonymous'
+      email:
+        description: Contributing Author's email address
+        type: string
+        default: ''
+      url: 
+        description: url to GET tarball patch from
+        type: string
+    
+
+
+
+jobs:
+  edit-article:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Unpack Changes
+        run: |
+          curl -o PATCH.tar.gz "${{inputs.url}}"
+          tar -xzf PATCH.tar.gz
+          rm PATCH.tar.gz
+
+      - name: Commit Changes & Make Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: New Article
+          labels: wiki
+          body: New Articles for the Wiki
+          author: ${{ inputs.name }}<${{ inputs.name }}>
+          committer: Kristal Wiki Editor<${{ github.actor }}@users.noreply.github.com>
+          commit-message: \[Article Content\]
+          branch: edit-wiki 
+          branch-suffix: timestamp
+          delete-branch: true

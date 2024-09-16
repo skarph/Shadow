@@ -19,7 +19,7 @@ import { TarWriter } from '@gera2ld/tarjs';
 import { Octokit } from '@octokit/rest';
 const repoOwner = "skarph"
 const repoName = "Shadow"
-const repoWorkflowId = "test.yml"
+const repoWorkflowId = "edit-wiki.yml"
 const repoRef = "main"
 const octokit = new Octokit({
     auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN
@@ -127,7 +127,6 @@ export default function Page({searchParams}) {
         const text = data.entries().next().value[1]
 
         //create virtual filestructure and zip it up to send to github actions
-        const req = `POST /repos/${repoOwner}/${repoName}/actions/workflows/${repoWorkflowId}/dispatches`
 
         const writer = new TarWriter()
         const titleSubPath = formatTitleURL(titleInputRef.current.value)
@@ -150,8 +149,9 @@ export default function Page({searchParams}) {
                         const res = JSON.parse(req.response)
                         if (res.status === 'success') {
                             const url = res.data.url.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/')
+                            const github_req = `POST /repos/${repoOwner}/${repoName}/actions/workflows/${repoWorkflowId}/dispatches`
                             console.log(url)
-                            octokit.request(req, {
+                            octokit.request(github_req, {
                                 ref: repoRef, 
                                 inputs: {url: url}
                             })
