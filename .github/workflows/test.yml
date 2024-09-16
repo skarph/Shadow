@@ -2,9 +2,10 @@
 on:
   workflow_dispatch:
     inputs:
-      data: 
-        description: base64 tarball of changed files
+      url: 
+        description: url to GET tarball patch from
         type: string
+    
 
 
 
@@ -14,8 +15,7 @@ jobs:
     steps:
       - name: Unpack Changes
         run: |
-          touch PATCH.tar.gz
-          echo "${{ inputs.data }}" | base64 --decode > PATCH.tar.gz
+          curl -o PATCH.tar.gz "${{inputs.url}}"
           tar -xzf PATCH.tar.gz
           rm PATCH.tar.gz
           file .

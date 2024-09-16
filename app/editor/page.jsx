@@ -139,7 +139,38 @@ export default function Page({searchParams}) {
         writer.write()
             .then( (tarBlob) => new Response(tarBlob.stream().pipeThrough(new CompressionStream("gzip"))).blob() )
             .then( (tarballBlob) => {
+                console.log(tarballBlob)
+                const form = new FormData()
+                form.append('file', tarballBlob ,'tarball.bin')
+                const req = new XMLHttpRequest()
+                req.open('POST', 'https://tmpfiles.org/api/v1/upload')
+                req.onerror = (e) => console.log(e)
+                req.onreadystatechange = () => {
+                    if (req.readyState === 4) {
+                        const res = JSON.parse(req.response)
+                        if (res.status === 'success') {
+                            const url = res.data.url.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/')
+                            console.log(url)
+                            octokit.request(req, {
+                                ref: repoRef, 
+                                inputs: {url: url}
+                            })
+                            .catch( (httpError) => {
+                                alert(httpError)
+                                console.log(httpError)
+                            })
+                            .then( (response) => {
+                                console.log(response)
+                            })
+                        } else {
+
+                        }
+                    }
+                }
+                req.send(form)
+                //local download
                 //window.location.assign(URL.createObjectURL(tarballBlob))
+                /*
                 const fr = new FileReader()
                 fr.readAsDataURL(tarballBlob)
                 fr.onloadend = () => {
@@ -155,6 +186,7 @@ export default function Page({searchParams}) {
                             console.log(response)
                         })
                 }
+                //*/
             })
         /*
         const zip = JSZip()
