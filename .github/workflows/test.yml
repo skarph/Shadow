@@ -1,9 +1,9 @@
-﻿name: Wiki Article Edit
+﻿name: Test
 on:
   workflow_dispatch:
     inputs:
       data: 
-        description: Zip archive for changes
+        description: binary string of Zip archive for changes
         type: string
 
 
@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Write Data
         run: |
+          echo ${{ inputs.data }}
           echo ${{ inputs.data }} > PATCH.zip
       - name: Check Data
         run: |

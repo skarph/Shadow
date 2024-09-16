@@ -18,13 +18,13 @@ import JSZip from "jszip"
 
 import { Octokit } from '@octokit/rest';
 const repoOwner = "skarph"
-const repoName = "Shadown"
-const repoWorkflowId = "wiki-editor-pr"
+const repoName = "Shadow"
+const repoWorkflowId = "Test"
 const octokit = new Octokit({
 
 })
 
-const MDXComponentsTypes = Object.keys(useMDXComponents())
+//const MDXComponentsTypes = Object.keys(useMDXComponents())
 
 function checkMDX(html, metadata, images) {
     images.forEach( (image, i) => {
@@ -144,7 +144,6 @@ export default function Page({searchParams}) {
             console.log(req)
             console.log(reply)
             console.log("===")
-            window.location = "data:application/zip;base64," + base64
         })
     }
 
