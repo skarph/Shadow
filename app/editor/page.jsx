@@ -14,14 +14,15 @@ import {ArticleHeader} from 'components/ArticleMeta'
 
 import * as sanitizeHtml from 'sanitize-html';
 
-import JSZip from "jszip"
+import { TarWriter } from '@gera2ld/tarjs';
 
 import { Octokit } from '@octokit/rest';
 const repoOwner = "skarph"
 const repoName = "Shadow"
-const repoWorkflowId = "Test"
+const repoWorkflowId = "test.yml"
+const repoRef = "main"
 const octokit = new Octokit({
-
+    auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN
 })
 
 //const MDXComponentsTypes = Object.keys(useMDXComponents())
@@ -124,7 +125,38 @@ export default function Page({searchParams}) {
         const form = e.target
         const data = new FormData(form)
         const text = data.entries().next().value[1]
+
         //create virtual filestructure and zip it up to send to github actions
+        const req = `POST /repos/${repoOwner}/${repoName}/actions/workflows/${repoWorkflowId}/dispatches`
+
+        const writer = new TarWriter()
+        const titleSubPath = formatTitleURL(titleInputRef.current.value)
+        writer.addFile(`app/data/articles/${titleSubPath}.mdx`, text)
+        images.forEach( (image, i) => writer.addFile(
+            `public/wiki/${titleSubPath}/${image.name}`,
+            image
+        ))
+        writer.write()
+            .then( (tarBlob) => new Response(tarBlob.stream().pipeThrough(new CompressionStream("gzip"))).blob() )
+            .then( (tarballBlob) => {
+                //window.location.assign(URL.createObjectURL(tarballBlob))
+                const fr = new FileReader()
+                fr.readAsDataURL(tarballBlob)
+                fr.onloadend = () => {
+                    octokit.request(req, {
+                            ref: repoRef, 
+                            inputs: {data: fr.result.replace('data:application/octet-stream;base64,', '')}
+                        })
+                        .catch( (httpError) => {
+                            alert(httpError)
+                            console.log(httpError)
+                        })
+                        .then( (response) => {
+                            console.log(response)
+                        })
+                }
+            })
+        /*
         const zip = JSZip()
         const titleSubPath = formatTitleURL(titleInputRef.current.value)
         zip.file(`app/data/articles/${titleSubPath}.mdx`, text)
@@ -133,18 +165,25 @@ export default function Page({searchParams}) {
             image
         ))
         //submit PR with github actions
-        zip.generateAsync({type:"base64"}).then( (base64) => {
-            const req = `PUT /repos/${repoOwner}/${repoName}/actions/worksflows/${repoWorkflowId}/dispatches`
+        zip.generateAsync({type:"binarystring"}).then( (base64) => {
+            const req = `POST /repos/${repoOwner}/${repoName}/actions/workflows/${repoWorkflowId}/dispatches`
             const reply = octokit.request(req, {
-                ref: 'master',
+                ref: repoRef,
                 inputs: {
-                    base64zip: base64
+                    data: base64
                 }
             })
-            console.log(req)
-            console.log(reply)
-            console.log("===")
+            .catch( (e) => {
+                alert(e)
+                console.log(e)
+            })
+            .then( (response) => {
+                console.log(req)
+                console.log(response)
+                console.log("===")
+            })
         })
+        */
     }
 
     function renderPreview(e) {
