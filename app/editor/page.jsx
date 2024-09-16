@@ -152,10 +152,15 @@ export default function Page({searchParams}) {
                             const github_req = `POST /repos/${repoOwner}/${repoName}/actions/workflows/${repoWorkflowId}/dispatches`
                             console.log(url)
                             octokit.request(github_req, {
-                                ref: repoRef, 
-                                inputs: {url: url}
+                                ref: repoRef,
+                                inputs: {
+                                    name: authornameInputRef.current.value,
+                                    email: authorlinkInputRef.current.value,
+                                    url: url,
+                                }
                             })
                             .catch( (httpError) => {
+                                //github error
                                 alert(httpError)
                                 console.log(httpError)
                             })
