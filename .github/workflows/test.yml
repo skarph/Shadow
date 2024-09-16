@@ -18,6 +18,7 @@ jobs:
           echo ${{ inputs.data }} > PATCH.zip
       - name: Check Data
         run: |
+          openssl dgst -sha256 PATCH.zip
           unzip -t PATCH.zip
           unzip -v PATCH.zip
       - name: Unzip Data
