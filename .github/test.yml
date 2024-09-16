@@ -1,0 +1,25 @@
+﻿name: Wiki Article Edit
+on:
+  workflow_dispatch:
+    inputs:
+      data: 
+        description: Zip archive for changes
+        type: string
+
+
+
+jobs:
+  edit-article:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write Data
+        run: |
+          echo ${{ inputs.data }} > PATCH.zip
+      - name: Check Data
+        run: |
+          unzip -t PATCH.zip
+          unzip -v PATCH.zip
+      - name: Unzip Data
+        run: |
+          unzip -u PATCH.zip
+          find .

@@ -1,6 +1,9 @@
 import MarkdownLink from "components/MarkdownLink"
 import Header from "components/Header"
 
+import ArticleTree from "components/ArticleTree"
+import ArticleCenterGroup from "components/ArticleCenterGroup"
+
 export function useMDXComponents(components) {
     return {
         a: (props) => (
@@ -23,6 +26,14 @@ export function useMDXComponents(components) {
         ),
         h6: (props) => (
             <Header level={6} {...props} />
+        ),
+
+        Tree: (props) => (
+            <ArticleTree {...props}/>
+        ),
+
+        CenterGroup: props => (
+            <ArticleCenterGroup {...props}/>
         ),
         ...components,
     }

@@ -1,0 +1,25 @@
+﻿name: Wiki Article Edit
+on:
+  workflow_dispatch:
+    inputs:
+      base64zip: 
+        description: Zip archive in base64 for changes
+        type: string
+
+
+
+jobs:
+  edit-article:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v4
+
+      - name: Write Incoming Data as Zip File
+
+
+      - name: Unzip Update
+
+
+      - name: Commit and Make PR
+        uses: peter-evans/create-pull-request@v7

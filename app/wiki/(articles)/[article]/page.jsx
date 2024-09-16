@@ -6,6 +6,8 @@ import styles from './page.module.css'
 import fs from 'fs'
 import path from 'path'
 
+import {evaluateSync} from '@mdx-js/mdx'
+import * as runtime from 'react/jsx-runtime'
 import {useMDXComponents} from 'mdx-components.js'
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -23,26 +25,17 @@ export default function Article({ params }) {
     const article_path = path.resolve(`app/data/articles/${params.article}.mdx`)
     
     const mdx = fs.readFileSync(article_path)
-    
-    //IMPORTANT NOTE: `MDXRemote` does
-    //`exec()`! make sure to sanitize any input before rendering it...
-    
-    return <div>
-        <MDXRemote 
-            source = {mdx}
-            components = {useMDXComponents()}
-            options = {{
-                scope: {styles},
-                mdxOptions: {
-                    remarkPlugins: [
-                        remarkGfm
-                    ],
-                    rehypePlugins: [
-                        rehypeHighlight
-                    ],
-                }
-            }}
-        />
-    </div>
+    const {default: MDXComponent} = evaluateSync( mdx, {
+        //processor
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeHighlight],
+        //compile
+        format: 'mdx',
 
+        //runtime
+        useMDXComponents: useMDXComponents,
+        ...runtime
+    })
+
+    return <MDXComponent/>
 }
