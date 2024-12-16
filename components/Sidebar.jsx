@@ -1,5 +1,5 @@
-import styles from "./Sidebar.module.css";
-import Searchbar from 'components/Searchbar'
+import styles from './Sidebar.module.css';
+import Searchbar from '/components/Searchbar'
 
 export default function Sidebar({children}) {
     return <div className={styles.sidebar}>

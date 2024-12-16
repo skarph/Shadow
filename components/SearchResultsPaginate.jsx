@@ -1,5 +1,5 @@
 "use client"
-import styles from "./SearchResultsPaginate.module.css";
+import styles from './SearchResultsPaginate.module.css';
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import Link from 'next/link';
@@ -38,7 +38,6 @@ export default function SearchResultsPaginate({ itemsPerPage, items }) {
         const newOffset = (event.selected * itemsPerPage) % items.length;
         setItemOffset(newOffset);
     };
-
     return (
         <>
             <ul><Items currentItems={currentItems} /></ul>

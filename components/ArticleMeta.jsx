@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { createElement } from 'react';
+import { Fragment } from 'react';
 import styles from './ArticleMeta.module.css';
-import prettyTag from 'src/prettyTag.mjs';
+import prettyTag from '/src/prettyTag.mjs';
 import styles_sidebar from './Sidebar.module.css';
 
 export function ArticleHeader({ children, className, metadata, ...props}) {
@@ -61,12 +62,12 @@ export function ArticleHeader({ children, className, metadata, ...props}) {
 export const ArticleAnchors = ({metadata}) => 
     <div className={styles_sidebar.anchor}> {
     metadata.anchors.map( (anchor, i) =>
-        <>
+        <Fragment key={i}>
         {createElement(`h${Math.min(anchor.level+1,5)}`, {key: i},
-            <a href={`#${anchor.href}`} key = {i}>
+            <a href={`#${anchor.href}`}>
                 {prettyTag(anchor.href)}            
             </a>
         )}
         {anchor.level <= 2 ? <hr/> : null}
-        </>
+        </Fragment>
     )} </div>

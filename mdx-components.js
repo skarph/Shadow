@@ -1,8 +1,8 @@
-import MarkdownLink from "components/MarkdownLink"
-import Header from "components/Header"
+import MarkdownLink from '/components/MarkdownLink'
+import Header from '/components/Header'
 
-import ArticleTree from "components/ArticleTree"
-import ArticleCenterGroup from "components/ArticleCenterGroup"
+import ArticleTree from '/components/ArticleTree'
+import ArticleCenterGroup from '/components/ArticleCenterGroup'
 
 export function useMDXComponents(components) {
     return {

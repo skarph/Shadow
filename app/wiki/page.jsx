@@ -1,13 +1,13 @@
-import Box from 'components/Box'
+import Box from '/components/Box'
 import styles from './page.module.css'
 import Link from 'next/link'
-import {searchQuery} from 'src/wikisearch.js'
-import SearchResultsPaginate from 'components/SearchResultsPaginate'
+import {searchQuery} from '/src/wikisearch.js'
+import SearchResultsPaginate from '/components/SearchResultsPaginate'
 import Image from 'next/image'
-import prettyTag from 'src/prettyTag.mjs'
+import prettyTag from '/src/prettyTag.mjs'
 
-import meta_list from 'app/data/meta-list.json'
-import title_logo_shadow from 'public/title_logo_shadow.png'
+import meta_list from '/app/data/meta-list.json'
+import title_logo_shadow from '/public/title_logo_shadow.png'
 
 function TableArticleLinks({columns}) {
     const tag_article = [] // [ {tag: string, articles=[]}, ... ]
@@ -44,19 +44,19 @@ function TableArticleLinks({columns}) {
     </ul>
 }
 
-export default function Page({
+export default async function Page({
     params,
     searchParams,
 }) {
-
+    const { search } = await searchParams 
     return(<>
     <Image src={title_logo_shadow} alt="title logo" className={styles.logo} />
     
     {
-        searchParams.search ?
+        search ?
         <Box>
-            <h2>{"Search Reults for: \""+searchParams.search+"\""}</h2>
-            <SearchResultsPaginate itemsPerPage = {10} items = {searchQuery(searchParams.search)}/>
+            <h2>{"Search Reults for: \""+search+"\""}</h2>
+            <SearchResultsPaginate itemsPerPage = {10} items = {searchQuery(search)}/>
         </Box>
         :<></>
     }

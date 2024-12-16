@@ -1,6 +1,7 @@
-import {getDocumentation} from 'src/docparser'
-import styles from 'components/Sidebar.module.css'
-import docstyles from 'app/wiki/api/[doc]/page.module.css'
+import {getDocumentation} from '/src/docparser'
+import { kristal_api } from '/src/docparser.mjs';
+import styles from '/components/Sidebar.module.css'
+import docstyles from '/app/wiki/api/[doc]/page.module.css'
 
 export async function generateStaticParams() {
     return kristal_api.map( (doc) => ({doc: doc.name}) )
@@ -65,22 +66,23 @@ const OptionalUndocumented = ({doc}) => doc.undocumented.length > 0 ?
     </>
     : null
 
-export default function Page({params}) {
-    const path = decodeURIComponent(params.doc)
+export default async function Page({params}) {
+    const { doc } = await params
+    const path = decodeURIComponent(doc)
     const ref = path.split(/[:\\.]/)
     const slug = ref[0]
 
-    const doc = getDocumentation(slug)
+    const documentation = getDocumentation(slug)
 
     return <div className = {styles.anchor}>
         <h2>
-            <a href={`#${doc.name}`}> {doc.name} </a>
+            <a href={`#${documentation.name}`}> {documentation.name} </a>
         </h2>
         <hr/>
 
-        <OptionalConstructor doc={doc}/>
-        <OptionalMethods doc={doc}/>
-        <OptionalFields doc={doc}/>
-        <OptionalUndocumented doc={doc}/>
+        <OptionalConstructor doc={documentation}/>
+        <OptionalMethods doc={documentation}/>
+        <OptionalFields doc={documentation}/>
+        <OptionalUndocumented doc={documentation}/>
     </div>
 }

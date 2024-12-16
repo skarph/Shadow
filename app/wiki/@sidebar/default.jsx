@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import starw from 'public/icon/starw.png'
+import starw from '/public/icon/starw.png'
 
 //should never appear in normal browsing
 export default function Page() {

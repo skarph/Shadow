@@ -1,6 +1,6 @@
 import styles from './Navbar.module.css';
 import Link from 'next/link';
-import NewTab from 'components/NewTab';
+import NewTab from '/components/NewTab';
 
 export default function Navbar() {
     return <div className={styles.navbar}>

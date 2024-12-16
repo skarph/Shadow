@@ -6,11 +6,11 @@ import {evaluateSync} from '@mdx-js/mdx'
 
 import * as runtime from 'react/jsx-runtime'
 import {useMDXComponents} from 'mdx-components.js'
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
 
-import Box from 'components/Box'
-import {ArticleHeader} from 'components/ArticleMeta'
+import Box from '/components/Box'
+import {ArticleHeader} from '/components/ArticleMeta'
 
 import * as sanitizeHtml from 'sanitize-html';
 

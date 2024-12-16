@@ -1,6 +1,6 @@
 "use client"
 //from https://www.emgoto.com/react-search-bar/
-import styles from "./Searchbar.module.css";
+import styles from './Searchbar.module.css';
 
 export default function Searchbar(props) {
     const placeholder = props.placeholder || "Search"

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import starw from 'public/icon/starw.png'
+import starw from '/public/icon/starw.png'
 
 export default function Page() {
     return <div style = {{display: "grid", "placeItems": "center", height: "25%"}}>

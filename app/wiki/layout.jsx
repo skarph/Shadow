@@ -1,5 +1,5 @@
 import styles from './layout.module.css'
-import Sidebar from 'components/Sidebar';
+import Sidebar from '/components/Sidebar';
 
 export const metadata = {
   title: 'Kristal Wiki',

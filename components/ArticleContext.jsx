@@ -1,8 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import getArticleMetadata from "src/getArticleMeta.mjs";
-import {ArticleHeader, ArticleAnchors} from "components/ArticleMeta";
+import { usePathname } from 'next/navigation';
+import getArticleMetadata from '/src/getArticleMeta.mjs';
+import {ArticleHeader, ArticleAnchors} from '/components/ArticleMeta';
 
 export function ThisArticleHeader() {
     try {

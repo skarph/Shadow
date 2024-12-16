@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function MarkdownLink({ children, href }) {
     if (href.startsWith("#")) {

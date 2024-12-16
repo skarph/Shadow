@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
-import { kristal_api } from 'src/docparser.mjs';
+import { kristal_api } from '/src/docparser.mjs';
 import { redirect } from 'next/navigation';
-import { getDocumentation, getDocumentationHeirachy} from 'src/docparser'
+import { getDocumentation, getDocumentationHeirachy} from '/src/docparser'
 import styles from './page.module.css'
 
-import Markdown from 'components/Markdown'
-import Docbox from 'components/Docbox';
+import Markdown from '/components/Markdown'
+import Docbox from '/components/Docbox';
 import { Fragment } from 'react';
 
 import Link from 'next/link';
@@ -17,9 +17,10 @@ export function generateStaticParams() {
 }
 export const dynamicParams = false
 
-export function generateMetadata({ params }){
+export async function generateMetadata({ params }){
+    const { doc } = await params
     return {
-        title: String(params.doc) + " | " + "Kristal API",
+        title: String(doc) + " | " + "Kristal API",
         description: "Kristal API Reference"
     }
 }
@@ -295,9 +296,10 @@ const OptionalValue = ({docDefine}) => {
     </table>
 }
 
-export default function Page({ params }) {
-    const slug = decodeURIComponent(params.doc)
-    const doc = getDocumentation(slug)
+export default async function Page({ params }) {
+    const { doc } = await params
+    const slug = decodeURIComponent(doc)
+    const documentation = getDocumentation(slug)
     //-Name
     //--?Inheritance Hierarchy
     //---Description
@@ -310,25 +312,25 @@ export default function Page({ params }) {
     //-?Undocumented
     //---[undocumented]
     return <Docbox className = {styles.wikiNoShadow}>
-        <h1 id = {doc.name}>
-            <a href = {"#"+doc.name}> {doc.name} </a> 
+        <h1 id = {documentation.name}>
+            <a href = {"#"+documentation.name}> {documentation.name} </a> 
         </h1>
         <h4>
-        {doc.hierarchy.map( (cls, index) => 
+        {documentation.hierarchy.map( (cls, index) => 
             <span key = {cls.name} style={{color: "gray"}}>
             {index === 0 ? "┗> " : " > "}
             <Link href={"/wiki/api/" + cls.name}>{cls.name}</Link>
             </span>
         )}
         </h4>
-        <Link href={getGithubLink(doc)}>See Github</Link>
-        <Markdown markdown = {doc.description}></Markdown>
+        <Link href={getGithubLink(documentation)}>See Github</Link>
+        <Markdown markdown = {documentation.description}></Markdown>
         <br/>
-        <OptionalConstructor doc = {doc}/>
-        <OptionalMethods doc = {doc}/>
-        <OptionalFields doc = {doc} field_list = {doc.field} class_style = {styles.syntaxField} label = "Fields"/>
-        <OptionalFields doc = {doc} field_list = {doc.undocumented} class_style = {styles.syntaxUndocumented} label = "Undocumented"/>
-        <OptionalValue docDefine = {doc.defines[0]}/>
+        <OptionalConstructor doc = {documentation}/>
+        <OptionalMethods doc = {documentation}/>
+        <OptionalFields doc = {documentation} field_list = {documentation.field} class_style = {styles.syntaxField} label = "Fields"/>
+        <OptionalFields doc = {documentation} field_list = {documentation.undocumented} class_style = {styles.syntaxUndocumented} label = "Undocumented"/>
+        <OptionalValue docDefine = {documentation.defines[0]}/>
     </Docbox>
 }
  

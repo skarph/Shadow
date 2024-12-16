@@ -1,8 +1,8 @@
-import { kristal_api_inheirtance_tree, kristal_api} from 'src/docparser';
-import Docbox from 'components/Docbox';
+import { kristal_api_inheirtance_tree, kristal_api} from '/src/docparser';
+import Docbox from '/components/Docbox';
 import styles from './page.module.css';
 import Link from 'next/link';
-import SwapVisibilityButton from 'components/SwapVisibilityButton'
+import SwapVisibilityButton from '/components/SwapVisibilityButton'
 import { Fragment } from 'react';
 
 export const metadata = {

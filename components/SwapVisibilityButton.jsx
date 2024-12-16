@@ -1,6 +1,6 @@
 "use client" 
 import styles from './SwapVisibilityButton.module.css';
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 function updateDisplay(displayB, elementA, elementB) {
     let a = document.getElementById(elementA)

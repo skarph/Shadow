@@ -1,4 +1,4 @@
-import getArticleMetadata from 'src/getArticleMeta'
+import getArticleMetadata from '/src/getArticleMeta'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { notFound } from 'next/navigation'
 import styles from './page.module.css'
@@ -8,21 +8,31 @@ import path from 'path'
 
 import {evaluateSync} from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
-import {useMDXComponents} from 'mdx-components.js'
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import {useMDXComponents} from '/mdx-components.js'
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
 
-export function generateMetadata({ params }){
+export async function generateMetadata({ params }){
+    const { article } = await params
     try{
-        return getArticleMetadata(params.article)
+        return getArticleMetadata(article)
     }catch (e){
         console.error(e)
     }
     return notFound()
 }
 
-export default function Article({ params }) {
-    const article_path = path.resolve(`app/data/articles/${params.article}.mdx`)
+export async function generateStaticParams(){
+    return fs.readdirSync(path.resolve('app/data/articles'), {encoding: "utf8"}, (err, files) => {
+    
+    }).map((path) => {
+        return {article: path.replace(".mdx","")}
+    })
+}
+
+export default async function Article({ params }) {
+    const { article } = await params
+    const article_path = path.resolve(`app/data/articles/${article}.mdx`)
     
     const mdx = fs.readFileSync(article_path)
     const {default: MDXComponent} = evaluateSync( mdx, {
