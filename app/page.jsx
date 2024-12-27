@@ -7,14 +7,6 @@ export default function Home() {
 
     const mods = [
         {
-            title: "Kris and Susie's Wacky Dark World Adventures",
-            description: "Explore a bunch of fun and exciting dark worlds with new and old friends!",
-            image: "/screenshots/kris_and_susies_wacky_dark_world_adventures.png",
-            page: "https://gamejolt.com/games/deltarune-kris-and-susies-wacky-dark-world/852417",
-            author: "TrashcatYT",
-            author_link: "https://gamejolt.com/@TrashcatYT"
-        },
-        {
             title: "Godhome",
             description: "Take your place amongst the Gods. 40+ boss fights, challenge modes, and a unique ending. Contains major spoilers for Hollow Knight.",
             image: "/screenshots/godhome.png",
@@ -40,7 +32,7 @@ export default function Home() {
         },
         {
             title: "Frozen Heart",
-            description: "The end of the Snowgrave Route seen from another place. While Kris gets torn to pieces by a bootleg Mettaton NEO, Susie have to face Noelle, lost in the trance of the Thorn Ring, before she freezes her to death! And who knows, maybe the situation can get even worse than that?",
+            description: "The end of the Snowgrave Route seen from another place. While Kris gets torn to pieces by a bootleg Mettaton NEO, Susie has to face Noelle, lost in the trance of the Thorn Ring, before she freezes her to death! And who knows, maybe the situation can get even worse than that?",
             image: "/screenshots/frozen_heart.png",
             page: "https://gamejolt.com/games/frozen-heart/659908",
             author: "Simbel",
@@ -48,8 +40,8 @@ export default function Home() {
         },
         {
             title: "Deltamon",
-            description: "Explore the vast reigon that Kris calls home as you aid them in becoming champion! Your rivals Susie Noelle and Berdly join alongside you to see and catch over 200+ pokemon from Kanto to Paldea!",
-            image: "/screenshots/deltamon_neo.png",
+            description: "Explore the vast region that Kris calls home as you aid them in becoming champion! Your rivals Susie, Noelle and Berdly join alongside you to see and catch over 200+ pokémon from Kanto to Paldea!",
+            image: "/screenshots/deltamon.png",
             page: null,
             author: "Riverstar",
             author_link: "https://twitter.com/NoahLuc60171586"
