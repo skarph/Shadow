@@ -28,6 +28,7 @@
     color: lightgray;
 
     font-family: "8bitOperatorPlus-Bold", monospace;
+    font-weight: normal;
   }
   
   .slider:before {

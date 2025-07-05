@@ -28,12 +28,13 @@ body {
 }
 
 strong, b {
-  font-weight: unset;
+  font-weight: normal;
   font-family: "8bitOperatorPlus-Bold", monospace;
   color: yellow;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
   font-family: "8bitOperatorPlus-Bold", monospace;
 }
 
@@ -122,6 +123,7 @@ td, th {
 }
 
 thead {
+  font-weight: normal;
   font-family: "8bitOperatorPlus-Bold", monospace;
 }
 
