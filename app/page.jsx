@@ -48,24 +48,33 @@ export default function Home() {
         }
     ]
 
-
     return (
         <>
-            <img src="title_logo_shadow.png" alt="title logo" className={styles.logo}/>
+            <picture className={styles.logo}>
+                <img src="title_logo_shadow.png" alt="title logo" />
+            </picture>
+
             <section className={styles.section}>
                 <Box>
                     <h2 className={styles.header}>What is this?</h2>
-                    Kristal is a powerful <NewTab href="https://deltarune.com/">DELTARUNE</NewTab> fangame and battle engine, made with <NewTab href="">LÖVE</NewTab>. It allows you to make <b>custom DELTARUNE worlds, battles, and more!</b>
+                    <p>
+                        Kristal is a powerful <NewTab href="https://deltarune.com/">DELTARUNE</NewTab> fangame and battle engine, made with <NewTab href="https://love2d.org/">LÖVE</NewTab>. It allows you to make <b>custom DELTARUNE worlds, battles, and more!</b>
+                    </p>
                 </Box>
 
                 <Box>
                     <h2 className={styles.header}>How do I use it?</h2>
-                    Check out the <Link href="/wiki/">wiki</Link> for more information on how to use Kristal.
+                    <p>
+                        Check out our <Link href="/wiki/">wiki</Link> for more information on how to use Kristal.
+                        Please keep in mind that you <b>must know Lua, or be willing to learn it!</b> We have our own Lua tutorial <Link href="/wiki/lua-tutorial">here</Link> to help you get started.
+                    </p>
                 </Box>
 
                 <Box>
                     <h2 className={styles.header}>Can I help?</h2>
-                    <b>Yes!</b> Feel free to look through the <NewTab href="https://github.com/KristalTeam/Kristal">source code of Kristal</NewTab> and contribute if you wish.
+                    <p>
+                        <b>Yes!</b> Feel free to look through the <NewTab href="https://github.com/KristalTeam/Kristal">source code of Kristal</NewTab> and contribute if you wish.
+                    </p>
                 </Box>
 
                 <Box>

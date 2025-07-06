@@ -10,4 +10,15 @@
     margin: 1rem;
     margin-bottom: 3rem;
     /*white-space: pre-line;*/
+
+    display: flex;
+    flex-direction: column;
+}
+
+.box > p:first-of-type {
+    margin-top: 0.75rem;
+}
+
+.box > p:last-of-type {
+    margin-bottom: 0.75rem;
 }

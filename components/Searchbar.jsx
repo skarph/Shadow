@@ -7,19 +7,23 @@ export default function Searchbar(props) {
     const submit = props.submit || "Submit"
 
     return (
-    <form action="/" method="get" className={styles}>
+    <form action="/" method="get" className={styles.form}>
+        {/* Header, for screen readers: */}
         <label htmlFor="header-search">
-            <span className={styles.visuallyhidden}>{placeholder}</span> 
+            <span className={styles.hidden}>{placeholder}</span> 
         </label>
+
         <input
             type="text"
             id="header-search"
             placeholder={placeholder}
             name="search"
+            className={styles.input}
         />
         <button 
             type="submit"
-            formAction = "/wiki"
+            formAction="/wiki"
+            className={styles.button}
         >
             {submit}
         </button>
